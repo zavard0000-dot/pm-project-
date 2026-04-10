@@ -13,7 +13,7 @@ class AuthorCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: Image.network(
-              'https://i.pravatar.cc/200?img=32',
+              'https://lh3.googleusercontent.com/vg_uEHrnRPq8H4MWqihO3W2xPPLZu6pbE9Vsq3rNAw_89N7gkaewBKYSmK1YbUM3mBz5bvSFP3dWAQZN=w544-h544-l90-rj',
               width: 58,
               height: 58,
               fit: BoxFit.cover,

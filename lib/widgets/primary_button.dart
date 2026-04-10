@@ -9,42 +9,60 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
   });
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = onPressed != null;
+
     return Container(
       width: double.infinity,
       height: 54,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primaryBlue, AppColors.primaryPurple],
+        gradient: LinearGradient(
+          colors: isEnabled
+              ? const [AppColors.primaryBlue, AppColors.primaryPurple]
+              : [
+                  AppColors.disabledGrey.withOpacity(0.5),
+                  AppColors.disabledGrey.withOpacity(0.5),
+                ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryBlue.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isEnabled
+            ? [
+                BoxShadow(
+                  color: AppColors.primaryBlue.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : [],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: onPressed,
+          onTap: isEnabled ? onPressed : null,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: Colors.white, size: 20),
+                Icon(
+                  icon,
+                  color: isEnabled ? Colors.white : Colors.white60,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
               ],
-              Text(text, style: AppTextStyles.button),
+              Text(
+                text,
+                style: AppTextStyles.button.copyWith(
+                  color: isEnabled ? Colors.white : Colors.white60,
+                ),
+              ),
             ],
           ),
         ),

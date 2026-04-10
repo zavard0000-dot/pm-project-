@@ -20,3 +20,14 @@ const COURSES_DROP_DOWN_MENU_ENTRIES = [
   DropdownMenuEntry(value: "3", label: "3 course"),
   DropdownMenuEntry(value: "4", label: "4 course"),
 ];
+
+const AVAILABLE_SKILLS = [
+  'React',
+  'Python',
+  'UI/UX',
+  'TypeScript',
+  'Figma',
+  'Data Science',
+  'Node.js',
+  'Flutter',
+];
