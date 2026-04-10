@@ -41,22 +41,12 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 18),
                       const Text(
                         'Ищу Frontend (React) для хакатона',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          height: 1.1,
-                        ),
+                        style: AppTextStyles.whiteHeadingLarge,
                       ),
                       const SizedBox(height: 12),
                       const Text(
                         'Хакатон "Digital Almaty" через 2 недели. Нужен человек, который быстро соберет MVP на готовом дизайне.',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          height: 1.35,
-                        ),
+                        style: AppTextStyles.whiteCaption,
                       ),
                     ],
                   ),

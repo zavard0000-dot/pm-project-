@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class SkillChip extends StatelessWidget {
   const SkillChip({super.key, required this.label});
@@ -15,11 +16,7 @@ class SkillChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Color(0xFF2563EB),
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-        ),
+        style: AppTextStyles.labelMedium.copyWith(color: AppColors.primaryBlue),
       ),
     );
   }

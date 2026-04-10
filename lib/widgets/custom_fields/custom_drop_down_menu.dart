@@ -37,10 +37,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
         //title
         if (widget.title != null)
           Container(
-            child: Text(
-              widget.title!,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
+            child: Text(widget.title!, style: AppTextStyles.labelLarge),
             margin: EdgeInsets.only(bottom: 8),
           ),
         Container(
@@ -57,10 +54,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
             dropdownMenuEntries: widget.dropDownMenuEntries,
             initialSelection: widget.value,
             hintText: "Select University",
-            textStyle: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 14,
-            ),
+            textStyle: AppTextStyles.bodyMedium,
             menuStyle: MenuStyle(
               backgroundColor: const WidgetStatePropertyAll(AppColors.surface),
               shape: WidgetStatePropertyAll(
@@ -75,10 +69,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
                 horizontal: 16,
                 vertical: 16,
               ),
-              hintStyle: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-              ),
+              hintStyle: AppTextStyles.hint,
             ),
             // onSelected: (value) {
             //   widget.onChanged?.call(value);
@@ -91,14 +82,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
         if (widget.error != null)
           Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 4),
-            child: Text(
-              widget.error!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 12,
-                height: 1.2,
-              ),
-            ),
+            child: Text(widget.error!, style: AppTextStyles.errorText),
           ),
       ],
     );

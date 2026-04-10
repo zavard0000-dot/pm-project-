@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class EditProfileHeader extends StatelessWidget {
   const EditProfileHeader({super.key});
@@ -46,14 +47,7 @@ class EditProfileHeader extends StatelessWidget {
                   ),
                   SizedBox(width: 48),
                   Icon(Icons.star_outline_sharp, color: Colors.white),
-                  Text(
-                    " Edit Profile",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(" Edit Profile", style: AppTextStyles.whiteHeadingLarge),
                 ],
               ),
 
@@ -72,7 +66,7 @@ class EditProfileHeader extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 "нажми для редактирование профеля",
-                style: TextStyle(color: Colors.white),
+                style: AppTextStyles.whiteCaption,
               ),
             ],
           ),

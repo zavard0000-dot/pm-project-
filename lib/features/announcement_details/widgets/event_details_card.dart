@@ -16,14 +16,7 @@ class EventDetailsCard extends StatelessWidget {
             children: [
               Text('⚡', style: TextStyle(fontSize: 18)),
               SizedBox(width: 8),
-              Text(
-                'Детали события',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
-                ),
-              ),
+              Text('Детали события', style: AppTextStyles.displayLarge),
             ],
           ),
           // const SizedBox(height: 8),
@@ -98,23 +91,14 @@ class _DetailTile extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          Text(value, style: AppTextStyles.headingSmall),
         ],
       ),
     );

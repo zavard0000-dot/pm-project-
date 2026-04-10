@@ -37,10 +37,7 @@ class _CustomeTextFieldState extends State<CustomTextField> {
       children: [
         if (widget.title != null)
           Container(
-            child: Text(
-              widget.title!,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
+            child: Text(widget.title!, style: AppTextStyles.labelLarge),
             margin: EdgeInsets.only(bottom: 8),
           ),
         Container(
@@ -58,10 +55,7 @@ class _CustomeTextFieldState extends State<CustomTextField> {
             maxLines: widget.maxLines,
             decoration: InputDecoration(
               hintText: widget.hint,
-              hintStyle: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-              ),
+              hintStyle: AppTextStyles.hint,
               prefixIcon: (widget.prefixIcon == null
                   ? null
                   : Icon(
@@ -94,14 +88,7 @@ class _CustomeTextFieldState extends State<CustomTextField> {
         if (widget.error != null)
           Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 4),
-            child: Text(
-              widget.error!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 12,
-                height: 1.2,
-              ),
-            ),
+            child: Text(widget.error!, style: AppTextStyles.errorText),
           ),
       ],
     );

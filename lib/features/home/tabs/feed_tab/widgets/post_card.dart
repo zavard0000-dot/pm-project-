@@ -57,20 +57,8 @@ class PostCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        university,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(name, style: AppTextStyles.subtitle),
+                      Text(university, style: AppTextStyles.captionMedium),
                     ],
                   ),
                 ),
@@ -82,25 +70,11 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('⚡ ', style: TextStyle(fontSize: 18)),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                Expanded(child: Text(title, style: AppTextStyles.headingSmall)),
               ],
             ),
             const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                height: 1.5,
-              ),
-            ),
+            Text(description, style: AppTextStyles.captionLarge),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -116,14 +90,7 @@ class PostCard extends StatelessWidget {
                         color: AppColors.primaryBlue.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(
-                          color: AppColors.primaryBlue,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: Text(tag, style: AppTextStyles.tag),
                     ),
                   )
                   .toList(),

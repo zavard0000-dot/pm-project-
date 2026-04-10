@@ -24,27 +24,13 @@ class AuthorCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Айгерім К.',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
+                Text('Айгерім К.', style: AppTextStyles.headingLarge),
                 SizedBox(height: 2),
-                Text(
-                  'КБТУ, 3 курс',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text('КБТУ, 3 курс', style: AppTextStyles.bodyMedium),
                 SizedBox(height: 2),
                 Text(
                   'опубликовано 2 дня назад',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF9CA3AF)),
+                  style: AppTextStyles.captionMedium,
                 ),
               ],
             ),

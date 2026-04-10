@@ -39,10 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       Text(
                         "👤 Base information",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTextStyles.headingMedium,
                       ),
                       SizedBox(height: 24),
                       CustomTextField(
@@ -86,13 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "📝 Contacts",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      Text("📝 Contacts", style: AppTextStyles.headingMedium),
                       SizedBox(height: 24),
 
                       CustomTextField(hint: "a@a.com", title: "Email"),

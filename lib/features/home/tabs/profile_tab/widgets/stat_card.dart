@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class StatCard extends StatelessWidget {
   const StatCard({
@@ -34,14 +35,8 @@ class StatCard extends StatelessWidget {
         children: [
           Icon(icon, color: iconColor),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            label,
-            style: const TextStyle(color: Color(0xFF6B7280), fontSize: 11),
-          ),
+          Text(value, style: AppTextStyles.statNumber),
+          Text(label, style: AppTextStyles.statLabel),
         ],
       ),
     );

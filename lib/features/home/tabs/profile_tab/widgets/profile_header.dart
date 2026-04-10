@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
 import 'package:teamup/models/models.dart';
+import 'package:teamup/theme.dart';
 import 'stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -53,14 +54,7 @@ class ProfileHeader extends StatelessWidget {
                       );
                     },
                   ),
-                  const Text(
-                    'My Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('My Profile', style: AppTextStyles.appBarTitle),
                   IconButton(
                     icon: const Icon(
                       Icons.settings_outlined,
@@ -80,18 +74,8 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                user.fullName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                user.username,
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
+              Text(user.fullName, style: AppTextStyles.whiteHeadingLarge),
+              Text(user.username, style: AppTextStyles.whiteSubtle),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +84,7 @@ class ProfileHeader extends StatelessWidget {
                   SizedBox(width: 4),
                   Text(
                     '${user.universityName}, ${user.currentCourse} year • ${user.professionName}',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                    style: AppTextStyles.whiteCaption,
                   ),
                 ],
               ),
@@ -114,7 +98,7 @@ class ProfileHeader extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Row(
+                child:  Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
@@ -125,10 +109,8 @@ class ProfileHeader extends StatelessWidget {
                     SizedBox(width: 4),
                     Text(
                       'Available for projects',
-                      style: TextStyle(
-                        color: Color(0xFF7C3AED),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.primaryPurple,
                       ),
                     ),
                   ],

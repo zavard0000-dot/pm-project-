@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class FilterSheetWidget extends StatefulWidget {
   const FilterSheetWidget({super.key});
@@ -33,10 +34,7 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Filters",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+              const Text("Filters", style: AppTextStyles.headingLarge),
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close),
@@ -46,10 +44,7 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
           const SizedBox(height: 20),
 
           // Секция Type
-          const Text(
-            "Type",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          const Text("Type", style: AppTextStyles.headingSmall),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -65,10 +60,7 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
           const SizedBox(height: 24),
 
           // Секция Skills
-          const Text(
-            "Skills",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          const Text("Skills", style: AppTextStyles.headingSmall),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -78,10 +70,7 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
           const SizedBox(height: 24),
 
           // Секция Event
-          const Text(
-            "Event",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          const Text("Event", style: AppTextStyles.headingSmall),
           _buildRadioItem("🏆 Hackathon"),
           _buildRadioItem("📚 Practice"),
           _buildRadioItem("🚀 Startup"),
@@ -99,9 +88,9 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
+                  child:  Text(
                     "Reset",
-                    style: TextStyle(color: Colors.black54, fontSize: 16),
+                    style: AppTextStyles.button.copyWith(color: Colors.black54),
                   ),
                 ),
               ),
@@ -116,10 +105,7 @@ class _FilterSheetWidgetState extends State<FilterSheetWidget> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    "Ready",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                  child: const Text("Ready", style: AppTextStyles.button),
                 ),
               ),
             ],

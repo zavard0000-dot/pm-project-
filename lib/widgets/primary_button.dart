@@ -44,14 +44,7 @@ class PrimaryButton extends StatelessWidget {
                 Icon(icon, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
               ],
-              Text(
-                text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text(text, style: AppTextStyles.button),
             ],
           ),
         ),

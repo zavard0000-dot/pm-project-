@@ -11,23 +11,11 @@ class DescriptionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Полное описание',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
-            ),
-          ),
+          Text('Полное описание', style: AppTextStyles.displayLarge),
           SizedBox(height: 10),
           Text(
             'Привет! Наша команда участвует в хакатоне Digital Almaty, который пройдет 5-7 апреля. Мы разрабатываем платформу для помощи студентам в поиске жилья. У нас уже есть бизнес-модель, дизайн и backend разработчик. Нам нужен опытный frontend разработчик, который сможет быстро собрать интерфейс на React. Важно уметь работать в команде и быстро принимать решения. Что мы предлагаем: дружную команду из 3 человек, готовый дизайн в Figma, опыт участия в хакатоне и возможность выиграть призовой фонд 500К тенге.',
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.captionLarge,
           ),
         ],
       ),

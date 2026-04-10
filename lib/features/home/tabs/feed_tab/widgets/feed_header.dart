@@ -37,17 +37,10 @@ class _FeedHeaderState extends State<FeedHeader> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'TeamUp Almaty',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text('TeamUp Almaty', style: AppTextStyles.whiteHeadingLarge),
                   Text(
                     'Find your dream team',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    style: AppTextStyles.whiteSubtle,
                   ),
                 ],
               ),

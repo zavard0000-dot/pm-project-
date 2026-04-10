@@ -60,18 +60,16 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                 Text(
                   'Join us!!',
-                  style: TextStyle(
+                  style: AppTextStyles.displayLarge.copyWith(
                     color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   'Create a profile and find a team',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: AppTextStyles.whiteSubtle,
                 ),
                 const SizedBox(height: 32),
                 Expanded(

@@ -26,10 +26,7 @@ class UniversityField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'University',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
+        const Text('University', style: AppTextStyles.labelLarge),
         const SizedBox(height: 8),
         Container(
           margin: EdgeInsets.only(bottom: error != null ? 6 : 24),
@@ -52,10 +49,7 @@ class UniversityField extends StatelessWidget {
                 size: 20,
               ),
             ),
-            hint: const Text(
-              'Select university',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-            ),
+            hint: const Text('Select university', style: AppTextStyles.hint),
             icon: const Padding(
               padding: EdgeInsets.only(right: 8),
               child: Icon(
@@ -79,14 +73,7 @@ class UniversityField extends StatelessWidget {
         if (error != null)
           Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 4),
-            child: Text(
-              error!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 12,
-                height: 1.2,
-              ),
-            ),
+            child: Text(error!, style: AppTextStyles.errorText),
           ),
       ],
     );

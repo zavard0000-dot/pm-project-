@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class CurrentProjectCard extends StatelessWidget {
   const CurrentProjectCard({
@@ -28,21 +29,9 @@ class CurrentProjectCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
+                Text(title, style: AppTextStyles.labelLarge),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Color(0xFF6B7280),
-                    fontSize: 12,
-                  ),
-                ),
+                Text(subtitle, style: AppTextStyles.captionMedium),
               ],
             ),
           ),

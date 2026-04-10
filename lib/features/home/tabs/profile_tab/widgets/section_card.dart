@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 
 class SectionCard extends StatelessWidget {
   const SectionCard({super.key, required this.title, required this.content});
@@ -24,15 +25,9 @@ class SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          Text(title, style: AppTextStyles.subtitle),
           const SizedBox(height: 12),
-          Text(
-            content,
-            style: const TextStyle(color: Color(0xFF6B7280), height: 1.5),
-          ),
+          Text(content, style: AppTextStyles.captionLarge),
         ],
       ),
     );

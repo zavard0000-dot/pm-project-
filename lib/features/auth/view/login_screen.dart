@@ -56,18 +56,16 @@ class _loginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   'Welcome back!',
-                  style: TextStyle(
+                  style: AppTextStyles.displayLarge.copyWith(
                     color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   'Log in to find your team',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: AppTextStyles.whiteSubtle,
                 ),
                 const SizedBox(height: 32),
 
@@ -159,15 +157,11 @@ class _loginScreenState extends State<LoginScreen> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                  ), // Заглушка для иконки
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     'Login with Google',
-                                    style: TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: AppTextStyles.subtitle,
                                   ),
                                 ],
                               ),
@@ -180,9 +174,7 @@ class _loginScreenState extends State<LoginScreen> {
                             children: [
                               const Text(
                                 "Don't have an account? ",
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                ),
+                                style: AppTextStyles.bodyMedium,
                               ),
                               TextButton(
                                 onPressed: () {
@@ -192,11 +184,10 @@ class _loginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 },
-                                child: const Text(
+                                child: Text(
                                   'Sign up',
-                                  style: TextStyle(
+                                  style: AppTextStyles.button.copyWith(
                                     color: AppColors.primaryBlue,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
