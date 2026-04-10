@@ -73,6 +73,10 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                     EventDetailsCard(),
                     SizedBox(height: 14),
                     DescriptionCard(),
+                    SizedBox(height: 14),
+                    SkillsRequiredCard(
+                      skills: ['React', 'TypeScript', 'UX Design', 'Figma'],
+                    ),
                     SizedBox(height: 24),
                     PrimaryButton(
                       icon: Icons.telegram,
