@@ -1,5 +1,4 @@
 import 'profile_stat_model.dart';
-import 'profile_section_model.dart';
 import 'current_project_model.dart';
 
 class MyUser {
@@ -11,7 +10,11 @@ class MyUser {
     required this.currentCourse,
     required this.professionName,
     required this.stats,
-    required this.sections,
+    required this.aboutMySelf,
+    required this.email,
+    required this.github,
+    required this.linkedin,
+    required this.location,
     required this.hardSkills,
     required this.currentProjects,
   });
@@ -23,7 +26,11 @@ class MyUser {
   final int currentCourse;
   final String professionName;
   final List<ProfileStatModel> stats;
-  final List<ProfileSectionModel> sections;
+  final String aboutMySelf;
+  final String email;
+  final String github;
+  final String linkedin;
+  final String location;
   final List<String> hardSkills;
   final List<CurrentProjectModel> currentProjects;
 }

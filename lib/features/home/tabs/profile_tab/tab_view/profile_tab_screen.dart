@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:teamup/features/home/tabs/profile_tab/widgets/widgets.dart';
-// import 'package:teamup/theme.dart';
 import 'package:teamup/models/models.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-  //final my_user user;
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +34,22 @@ class ProfileScreen extends StatelessWidget {
           iconColor: Color(0xFFDB2777),
         ),
       ],
-      sections: [
-        ProfileSectionModel(
-          title: '📝 about myself',
-          content:
-              "A passionate developer and designer. I love creating cool web apps and participating in hackathons. I'm looking for interesting projects and a team to bring innovative ideas to life.",
-        ),
-        ProfileSectionModel(
-          title: '📇 Contacts',
-          content:
-              "Telegram: @aigerim_dev\nEmail: hello@aigerim.dev\nGitHub: github.com/aigerim",
-        ),
+      aboutMySelf:
+          "A passionate developer and designer. I love creating cool web apps and participating in hackathons. I'm looking for interesting projects and a team to bring innovative ideas to life.",
+      email: 'aigerim.k@kbtu.kz',
+      github: '@aigerim_dev',
+      linkedin: 'linkedin.com/in/aigerim-k',
+      location: 'Almaty, Kazakhstan',
+      hardSkills: [
+        'React',
+        '2D Design',
+        'Docker',
+        'Frontend',
+        'Figma',
+        'UI/UX Design',
+        'Git',
+        'PostgreSQL',
       ],
-      hardSkills: ['Flutter', 'Dart', 'ReactJS', 'Figma', 'Firebase'],
       currentProjects: [
         CurrentProjectModel(
           title: 'UniMatch App',
@@ -62,76 +63,41 @@ class ProfileScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      // Используем ListView для плавного скролла всего экрана
       body: ListView(
-        // Убираем дефолтные отступы, чтобы градиент был у самого края
         padding: EdgeInsets.zero,
-        //physics: const BouncingScrollPhysics(), // Приятная анимация скролла
         children: [
-          // Шапка с градиентом и карточками
+          // Profile Header
           ProfileHeader(user: user),
 
-          // Отступ после Stack, чтобы компенсировать Positioned карточки
           const SizedBox(height: 60),
 
-          // Основной контент страницы (сделал больше, чтобы листалось)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //Sections
-                //... - вставляет элементы в тек коллекцию из списка/набора и др коллекций
-                ...user.sections.map((section) {
-                  return Column(
-                    children: [
-                      SectionCard(
-                        title: section.title,
-                        content: section.content,
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  );
-                }),
-                // SectionCard(
-                //   title: '📝 about myself',
-                //   content:
-                //       "A passionate developer and designer. I love creating cool web apps and participating in hackathons. I'm looking for interesting projects and a team to bring innovative ideas to life.",
-                // ),
-                // const SizedBox(height: 16),
-                // SectionCard(
-                //   title: '📇 Contacts',
-                //   content:
-                //       "Telegram: @aigerim_dev\nEmail: hello@aigerim.dev\nGitHub: github.com/aigerim",
-                // ),
-                // const SizedBox(height: 16),
+                // About Myself Section
+                AboutMyselfCard(content: user.aboutMySelf),
+                const SizedBox(height: 16),
 
-                //hard skills (дополнительное поле)
-                const Text(
-                  'Hard Skills',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF111827),
-                  ),
+                // Contacts Section
+                ContactsCard(
+                  email: user.email,
+                  github: user.github,
+                  linkedin: user.linkedin,
+                  location: user.location,
                 ),
-                const SizedBox(height: 12),
-                if (user.hardSkills.isEmpty) Text("you have no hard skills!"),
-                if (user.hardSkills.isNotEmpty)
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: user.hardSkills
-                        .map((skill) => SkillChip(label: skill))
-                        .toList(),
-                  ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
-                //Текущие проекты (Дополнительная секция)
-                const Text(
-                  'Current Projects',
+                // Hard Skills Section
+                HardSkillsCard(skills: user.hardSkills),
+                const SizedBox(height: 16),
+
+                // Current Projects Section
+                Text(
+                  '📁 Current Projects',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF111827),
                   ),
