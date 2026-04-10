@@ -10,14 +10,26 @@ class HardSkillsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('⚡ Skills', style: AppTextStyles.headingSmall),
+          Text(
+            '⚡ Skills',
+            style: isDarkMode
+                ? AppTextStyles.darkHeadingSmall
+                : AppTextStyles.headingSmall,
+          ),
           const SizedBox(height: 12),
           if (skills.isEmpty)
-            Text('No skills added yet', style: AppTextStyles.captionMedium),
+            Text(
+              'No skills added yet',
+              style: isDarkMode
+                  ? AppTextStyles.darkCaptionMedium
+                  : AppTextStyles.captionMedium,
+            ),
           if (skills.isNotEmpty)
             Wrap(
               spacing: 8,

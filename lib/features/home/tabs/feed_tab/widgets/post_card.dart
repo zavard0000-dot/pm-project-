@@ -24,6 +24,8 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(
@@ -40,8 +42,10 @@ class PostCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 20,
                   backgroundColor: isAvatarText
-                      ? AppColors.primaryPurple.withOpacity(0.7)
-                      : Colors.grey[300],
+                      ? AppColors.primaryPurple.withValues(alpha: 0.7)
+                      : (isDarkMode
+                            ? AppColors.darkSurfaceVariant
+                            : Colors.grey[300]!),
                   backgroundImage: !isAvatarText
                       ? const NetworkImage('https://i.pravatar.cc/150?img=5')
                       : null,
@@ -57,8 +61,18 @@ class PostCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(name, style: AppTextStyles.subtitle),
-                      Text(university, style: AppTextStyles.captionMedium),
+                      Text(
+                        name,
+                        style: isDarkMode
+                            ? AppTextStyles.darkBodyLarge
+                            : AppTextStyles.subtitle,
+                      ),
+                      Text(
+                        university,
+                        style: isDarkMode
+                            ? AppTextStyles.darkCaptionMedium
+                            : AppTextStyles.captionMedium,
+                      ),
                     ],
                   ),
                 ),
@@ -70,11 +84,23 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('⚡ ', style: TextStyle(fontSize: 18)),
-                Expanded(child: Text(title, style: AppTextStyles.headingSmall)),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: isDarkMode
+                        ? AppTextStyles.darkHeadingSmall
+                        : AppTextStyles.headingSmall,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 8),
-            Text(description, style: AppTextStyles.captionLarge),
+            Text(
+              description,
+              style: isDarkMode
+                  ? AppTextStyles.darkBodyMedium
+                  : AppTextStyles.captionLarge,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -87,10 +113,17 @@ class PostCard extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryBlue.withOpacity(0.1),
+                        color: AppColors.primaryBlue.withValues(
+                          alpha: isDarkMode ? 0.2 : 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(tag, style: AppTextStyles.tag),
+                      child: Text(
+                        tag,
+                        style: isDarkMode
+                            ? AppTextStyles.darkBodyMedium
+                            : AppTextStyles.tag,
+                      ),
                     ),
                   )
                   .toList(),

@@ -14,6 +14,14 @@ class AppColors {
   static const inputBorder = Color(0xFFE5E7EB);
   static const errorRed = Color(0xFFDC2626);
   static const disabledGrey = Color(0xFF9CA3AF);
+
+  // Dark theme colors
+  static const darkBackground = Color(0xFF0F172A);
+  static const darkSurface = Color(0xFF1E293B);
+  static const darkSurfaceVariant = Color(0xFF334155);
+  static const darkTextPrimary = Color(0xFFF1F5F9);
+  static const darkTextSecondary = Color(0xFFCBD5E1);
+  static const darkInputBorder = Color.fromARGB(255, 52, 61, 73);
 }
 
 class AppTextStyles {
@@ -211,6 +219,43 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
   );
+
+  // ===== Dark Theme Styles =====
+  /// Заголовок малый (темная тема)
+  static const darkHeadingSmall = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: AppColors.darkTextPrimary,
+  );
+
+  /// Основной текст большой (темная тема)
+  static const darkBodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.darkTextPrimary,
+  );
+
+  /// Основной текст средний (темная тема)
+  static const darkBodyMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.darkTextSecondary,
+  );
+
+  /// Описание текста (темная тема)
+  static const darkCaptionMedium = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.darkTextSecondary,
+  );
+
+  /// Ошибка (темная тема)
+  static const darkErrorText = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.errorRed,
+    height: 1.2,
+  );
 }
 
 class AppTheme {
@@ -221,7 +266,7 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primaryBlue,
         primary: AppColors.primaryBlue,
-        background: AppColors.background,
+        surface: AppColors.background,
       ),
       fontFamily: 'Roboto', // Replace with 'Inter' in pubspec.yaml if desired
       appBarTheme: const AppBarTheme(
@@ -230,6 +275,48 @@ class AppTheme {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: AppTextStyles.appBarTitle,
+      ),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: AppColors.darkBackground,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color.fromARGB(255, 163, 72, 72),
+        primary: Color.fromARGB(255, 163, 72, 72),
+        surface: AppColors.darkSurface,
+        brightness: Brightness.dark,
+      ),
+      fontFamily: 'Roboto',
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: AppTextStyles.appBarTitle,
+      ),
+      cardTheme: CardThemeData(color: AppColors.darkSurface, elevation: 0),
+      inputDecorationTheme: InputDecorationTheme(
+        fillColor: AppColors.darkSurfaceVariant,
+        filled: true,
+        contentPadding: const EdgeInsets.all(16),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.darkInputBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
+        ),
+        hintStyle: AppTextStyles.hint.copyWith(
+          color: AppColors.darkTextSecondary,
+        ),
+        labelStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.darkTextPrimary,
+        ),
       ),
     );
   }

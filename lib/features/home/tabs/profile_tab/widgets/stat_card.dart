@@ -17,15 +17,17 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      width: 105, // Немного увеличил ширину, чтобы текст точно влезал
+      width: 105,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? AppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.15),
             blurRadius: 15,
             offset: const Offset(0, 6),
           ),
@@ -35,8 +37,18 @@ class StatCard extends StatelessWidget {
         children: [
           Icon(icon, color: iconColor),
           const SizedBox(height: 8),
-          Text(value, style: AppTextStyles.statNumber),
-          Text(label, style: AppTextStyles.statLabel),
+          Text(
+            value,
+            style: isDarkMode
+                ? AppTextStyles.darkBodyLarge
+                : AppTextStyles.statNumber,
+          ),
+          Text(
+            label,
+            style: isDarkMode
+                ? AppTextStyles.darkCaptionMedium
+                : AppTextStyles.statLabel,
+          ),
         ],
       ),
     );

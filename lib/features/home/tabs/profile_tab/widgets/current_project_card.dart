@@ -13,25 +13,41 @@ class CurrentProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        color: isDarkMode ? AppColors.darkSurface : const Color(0xFFF9FAFB),
+        border: Border.all(
+          color: isDarkMode
+              ? AppColors.darkInputBorder
+              : const Color(0xFFE5E7EB),
+        ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          const Icon(Icons.folder_outlined, color: Color(0xFF7C3AED)),
+          Icon(Icons.folder_outlined, color: Color(0xFF7C3AED)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.labelLarge),
+                Text(
+                  title,
+                  style: isDarkMode
+                      ? AppTextStyles.darkBodyLarge
+                      : AppTextStyles.labelLarge,
+                ),
                 const SizedBox(height: 4),
-                Text(subtitle, style: AppTextStyles.captionMedium),
+                Text(
+                  subtitle,
+                  style: isDarkMode
+                      ? AppTextStyles.darkCaptionMedium
+                      : AppTextStyles.captionMedium,
+                ),
               ],
             ),
           ),

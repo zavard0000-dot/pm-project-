@@ -9,13 +9,25 @@ class AboutMyselfCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('📝 About myself', style: AppTextStyles.headingSmall),
+          Text(
+            '📝 About myself',
+            style: isDarkMode
+                ? AppTextStyles.darkHeadingSmall
+                : AppTextStyles.headingSmall,
+          ),
           const SizedBox(height: 12),
-          Text(content, style: AppTextStyles.captionLarge),
+          Text(
+            content,
+            style: isDarkMode
+                ? AppTextStyles.darkBodyMedium
+                : AppTextStyles.captionLarge,
+          ),
         ],
       ),
     );

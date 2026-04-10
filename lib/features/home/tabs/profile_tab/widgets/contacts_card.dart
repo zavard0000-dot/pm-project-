@@ -18,11 +18,18 @@ class ContactsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('📇 Contacts', style: AppTextStyles.headingSmall),
+          Text(
+            '📇 Contacts',
+            style: isDarkMode
+                ? AppTextStyles.darkHeadingSmall
+                : AppTextStyles.headingSmall,
+          ),
           const SizedBox(height: 16),
           _ContactItem(
             icon: Icons.email_outlined,
@@ -30,7 +37,11 @@ class ContactsCard extends StatelessWidget {
             color: AppColors.primaryBlue,
           ),
           const SizedBox(height: 12),
-          _ContactItem(icon: Icons.code, label: github, color: Colors.black87),
+          _ContactItem(
+            icon: Icons.code,
+            label: github,
+            color: isDarkMode ? AppColors.darkTextPrimary : Colors.black87,
+          ),
           const SizedBox(height: 12),
           _ContactItem(
             icon: Icons.business,
@@ -62,6 +73,8 @@ class _ContactItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Icon(icon, color: color, size: 20),
@@ -69,7 +82,9 @@ class _ContactItem extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: AppTextStyles.bodyMedium,
+            style: isDarkMode
+                ? AppTextStyles.darkBodyMedium
+                : AppTextStyles.bodyMedium,
             overflow: TextOverflow.ellipsis,
           ),
         ),

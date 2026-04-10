@@ -19,6 +19,8 @@ class SettingMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Padding(
@@ -27,11 +29,24 @@ class SettingMenuItem extends StatelessWidget {
           children: [
             Icon(icon, size: 24, color: iconColor ?? Color(0xFF7C3AED)),
             const SizedBox(width: 12),
-            Expanded(child: Text(label, style: AppTextStyles.bodyLarge)),
+            Expanded(
+              child: Text(
+                label,
+                style: isDarkMode
+                    ? AppTextStyles.darkBodyLarge
+                    : AppTextStyles.bodyLarge,
+              ),
+            ),
             if (trailing != null)
               trailing!
             else
-              Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF9CA3AF)),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : Color(0xFF9CA3AF),
+              ),
           ],
         ),
       ),

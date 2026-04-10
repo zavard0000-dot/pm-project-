@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teamup/features/settings/widgets/widgets.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/theme.dart';
+import 'package:teamup/main.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,6 +15,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool pushNotifications = true;
   bool emailNotifications = true;
   bool messagesNotifications = false;
+  late bool isDarkTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    isDarkTheme = themeNotifier.value == ThemeMode.dark;
+  }
 
   final user = MyUser(
     fullName: 'Айгерім Калиева',
@@ -216,8 +224,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: 'Темная тема',
                       iconColor: Color(0xFF00B4D8),
                       trailing: Switch(
-                        value: false,
+                        value: isDarkTheme,
                         onChanged: (value) {
+                          setState(() {
+                            isDarkTheme = value;
+                          });
+                          themeNotifier.value = value
+                              ? ThemeMode.dark
+                              : ThemeMode.light;
                           print('[SETTINGS] Dark theme toggled: $value');
                         },
                         activeColor: Color(0xFF111827),

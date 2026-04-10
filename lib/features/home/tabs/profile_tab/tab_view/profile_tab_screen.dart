@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teamup/features/home/tabs/profile_tab/widgets/widgets.dart';
 import 'package:teamup/models/models.dart';
+import 'package:teamup/theme.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -94,13 +95,17 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Current Projects Section
-                Text(
-                  '📁 Current Projects',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF111827),
-                  ),
+                Builder(
+                  builder: (context) {
+                    final isDarkMode =
+                        Theme.of(context).brightness == Brightness.dark;
+                    return Text(
+                      '📁 Current Projects',
+                      style: isDarkMode
+                          ? AppTextStyles.darkHeadingSmall
+                          : AppTextStyles.headingSmall,
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
                 ...user.currentProjects.map((currentProject) {

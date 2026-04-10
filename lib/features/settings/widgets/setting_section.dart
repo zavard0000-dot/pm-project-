@@ -14,10 +14,17 @@ class SettingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppTextStyles.headingSmall),
+        Text(
+          title,
+          style: isDarkMode
+              ? AppTextStyles.darkHeadingSmall
+              : AppTextStyles.headingSmall,
+        ),
         const SizedBox(height: 12),
         BaseCard(
           child: Column(
@@ -27,7 +34,13 @@ class SettingSection extends StatelessWidget {
                 children: [
                   entry.value,
                   if (!isLast)
-                    Divider(color: Color(0xFFE5E7EB), height: 1, thickness: 1),
+                    Divider(
+                      color: isDarkMode
+                          ? AppColors.darkInputBorder
+                          : Color(0xFFE5E7EB),
+                      height: 1,
+                      thickness: 1,
+                    ),
                 ],
               );
             }).toList(),

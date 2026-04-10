@@ -18,40 +18,49 @@ class _FeedHeaderState extends State<FeedHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SliverAppBar(
       expandedHeight: 250.0,
       floating: false,
       pinned: true,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.primaryBlue,
-      // shape: const RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
-      // ),
+      backgroundColor: isDarkMode
+          ? AppColors.darkSurface
+          : AppColors.primaryBlue,
       flexibleSpace: FlexibleSpaceBar(
-        background: Padding(
-          padding: EdgeInsets.all(16).copyWith(top: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('TeamUp Almaty', style: AppTextStyles.whiteHeadingLarge),
-                  Text(
-                    'Find your dream team',
-                    style: AppTextStyles.whiteSubtle,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white24,
-                  child: Icon(Icons.favorite_border, color: Colors.white),
+        background: Container(
+          color: isDarkMode ? AppColors.darkSurface : AppColors.primaryBlue,
+          child: Padding(
+            padding: EdgeInsets.all(16).copyWith(top: 32),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'TeamUp Almaty',
+                      style: AppTextStyles.whiteHeadingLarge,
+                    ),
+                    Text(
+                      'Find your dream team',
+                      style: AppTextStyles.whiteSubtle,
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: CircleAvatar(
+                    backgroundColor: isDarkMode
+                        ? AppColors.darkInputBorder
+                        : Colors.white24,
+                    child: Icon(Icons.favorite_border, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -65,16 +74,20 @@ class _FeedHeaderState extends State<FeedHeader> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDarkMode ? AppColors.darkInputBorder : Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text("SADASDSDADASD"),
             ),
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: isDarkMode ? AppColors.darkSurface : Colors.white,
                 border: Border(
-                  bottom: BorderSide(color: AppColors.inputBorder),
+                  bottom: BorderSide(
+                    color: isDarkMode
+                        ? AppColors.darkInputBorder
+                        : AppColors.inputBorder,
+                  ),
                 ),
               ),
               child: Padding(
@@ -104,11 +117,14 @@ class _FeedHeaderState extends State<FeedHeader> {
                         const Spacer(),
                         //кнопка для показала модал боттом шит
                         Container(
-                          // padding: const EdgeInsets.all(4),
                           width: 42,
                           height: 42,
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.inputBorder),
+                            border: Border.all(
+                              color: isDarkMode
+                                  ? AppColors.darkInputBorder
+                                  : AppColors.inputBorder,
+                            ),
                             borderRadius: BorderRadius.circular(90),
                           ),
                           child: IconButton(
@@ -116,7 +132,9 @@ class _FeedHeaderState extends State<FeedHeader> {
                             padding: EdgeInsets.zero,
                             icon: Icon(
                               Icons.filter_alt_outlined,
-                              color: AppColors.textSecondary,
+                              color: isDarkMode
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.textSecondary,
                             ),
                             onPressed: () {
                               _openFilters(context);
@@ -132,7 +150,6 @@ class _FeedHeaderState extends State<FeedHeader> {
           ],
         ),
       ),
-      // bottom: PreferredSize(preferredSize: Pref, child: child),
     );
   }
 }
@@ -142,11 +159,12 @@ void _openFilters(BuildContext context) {
   String selectedType = 'Individuals';
   List<String> selectedSkills = [];
   String? selectedEvent;
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.white,
+    backgroundColor: isDarkMode ? AppColors.darkSurface : Colors.white,
     barrierColor: Colors.black.withOpacity(0.5),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
@@ -165,28 +183,38 @@ void _openFilters(BuildContext context) {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Filters",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : Colors.black,
                       ),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        Icons.close,
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : Colors.black,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
 
                 // Секция Type
-                const Text(
+                Text(
                   "Type",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -203,7 +231,11 @@ void _openFilters(BuildContext context) {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: isSel ? Colors.blue : Colors.grey.shade300,
+                              color: isSel
+                                  ? Colors.blue
+                                  : (isDarkMode
+                                        ? AppColors.darkInputBorder
+                                        : Colors.grey.shade300),
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(16),
@@ -215,13 +247,21 @@ void _openFilters(BuildContext context) {
                                 type == 'Individuals'
                                     ? Icons.person
                                     : Icons.groups,
-                                color: isSel ? Colors.blue : Colors.grey,
+                                color: isSel
+                                    ? Colors.blue
+                                    : (isDarkMode
+                                          ? AppColors.darkTextSecondary
+                                          : Colors.grey),
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 type,
                                 style: TextStyle(
-                                  color: isSel ? Colors.blue : Colors.black,
+                                  color: isSel
+                                      ? Colors.blue
+                                      : (isDarkMode
+                                            ? AppColors.darkTextPrimary
+                                            : Colors.black),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -236,9 +276,15 @@ void _openFilters(BuildContext context) {
                 const SizedBox(height: 24),
 
                 // Секция Skills
-                const Text(
+                Text(
                   "Skills",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Wrap(
@@ -268,9 +314,15 @@ void _openFilters(BuildContext context) {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           selectedColor: Colors.blue.withOpacity(0.1),
-                          backgroundColor: Colors.white,
+                          backgroundColor: isDarkMode
+                              ? AppColors.darkSurfaceVariant
+                              : Colors.white,
                           side: BorderSide(
-                            color: isSel ? Colors.blue : Colors.grey.shade300,
+                            color: isSel
+                                ? Colors.blue
+                                : (isDarkMode
+                                      ? AppColors.darkInputBorder
+                                      : Colors.grey.shade300),
                           ),
                         );
                       }).toList(),
@@ -279,9 +331,15 @@ void _openFilters(BuildContext context) {
                 const SizedBox(height: 24),
 
                 // Секция Event
-                const Text(
+                Text(
                   "Event",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : Colors.black,
+                  ),
                 ),
                 ...[
                   {'title': 'Hackathon', 'emoji': '🏆'},
@@ -290,7 +348,14 @@ void _openFilters(BuildContext context) {
                 ].map((item) {
                   final title = "${item['emoji']} ${item['title']}";
                   return RadioListTile<String>(
-                    title: Text(title),
+                    title: Text(
+                      title,
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : Colors.black,
+                      ),
+                    ),
                     value: title,
                     groupValue: selectedEvent,
                     activeColor: Colors.blue,
@@ -312,10 +377,19 @@ void _openFilters(BuildContext context) {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
+                          side: BorderSide(
+                            color: isDarkMode
+                                ? AppColors.darkInputBorder
+                                : Colors.grey.shade300,
+                          ),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Reset",
-                          style: TextStyle(color: Colors.black54),
+                          style: TextStyle(
+                            color: isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : Colors.black54,
+                          ),
                         ),
                       ),
                     ),

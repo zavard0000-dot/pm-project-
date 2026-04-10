@@ -14,15 +14,23 @@ class MyFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         margin: EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBlue : Colors.white,
+          color: (isDarkMode == false
+              ? (isSelected ? AppColors.primaryBlue : Colors.white)
+              : (isSelected ? AppColors.darkInputBorder : Colors.transparent)),
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.inputBorder),
+          border: isSelected
+              ? null
+              : (isDarkMode
+                    ? Border.all(color: AppColors.darkInputBorder)
+                    : Border.all(color: AppColors.inputBorder)),
         ),
         child: Text(
           title,

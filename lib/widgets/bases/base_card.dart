@@ -16,21 +16,26 @@ class BaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: width,
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: isDarkMode ? AppColors.darkSurface : AppColors.surface,
         borderRadius: BorderRadius.circular(20),
-
         border: Border.all(
-          color: const Color.fromARGB(255, 235, 236, 236),
+          color: isDarkMode
+              ? AppColors.darkInputBorder
+              : const Color.fromARGB(255, 235, 236, 236),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: isDarkMode
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
