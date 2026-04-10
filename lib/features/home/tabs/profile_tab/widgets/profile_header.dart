@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
+import 'package:teamup/features/settings/settings.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/theme.dart';
 import 'stat_card.dart';
@@ -60,7 +61,11 @@ class ProfileHeader extends StatelessWidget {
                       Icons.settings_outlined,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => SettingsScreen()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -98,7 +103,7 @@ class ProfileHeader extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child:  Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(

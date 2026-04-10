@@ -162,6 +162,13 @@ class AppTextStyles {
     color: Color(0xFFE5E7EB),
   );
 
+  /// Белый текст для имени на цветных фонах
+  static const whiteBodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+
   /// Белый полупрозрачный текст
   static const whiteSubtle = TextStyle(
     fontSize: 14,
