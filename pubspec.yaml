@@ -35,6 +35,9 @@ dependencies:
   talker_flutter: ^5.1.15
   firebase_core: 4.6.0
   firebase_auth: 6.3.0
+  cloud_firestore: 6.2.0
+  get_it: 9.2.1
+  provider: ^6.0.0
 
 dev_dependencies:
   flutter_test:

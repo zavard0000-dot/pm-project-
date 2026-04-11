@@ -15,26 +15,9 @@ class ProfileScreen extends StatelessWidget {
       universityName: 'KBTU',
       currentCourse: 3,
       professionName: 'Computer Science',
-      stats: [
-        ProfileStatModel(
-          icon: Icons.track_changes,
-          value: 22,
-          title: 'Projects',
-          iconColor: Color(0xFF2563EB),
-        ),
-        ProfileStatModel(
-          icon: Icons.people_outline,
-          value: 111,
-          title: 'Connections',
-          iconColor: Color(0xFF7C3AED),
-        ),
-        ProfileStatModel(
-          icon: Icons.emoji_events_outlined,
-          value: 7,
-          title: 'Achievements',
-          iconColor: Color(0xFFDB2777),
-        ),
-      ],
+      projectsCount: 22,
+      connectionsCount: 111,
+      achievementsCount: 7,
       aboutMySelf:
           "A passionate developer and designer. I love creating cool web apps and participating in hackathons. I'm looking for interesting projects and a team to bring innovative ideas to life.",
       email: 'aigerim.k@kbtu.kz',

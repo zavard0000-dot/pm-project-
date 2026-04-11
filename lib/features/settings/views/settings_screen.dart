@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
 import 'package:teamup/features/settings/widgets/widgets.dart';
 import 'package:teamup/models/models.dart';
+import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/main.dart';
 
@@ -30,7 +33,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     universityName: 'KBTU',
     currentCourse: 3,
     professionName: 'Computer Science',
-    stats: [],
+    projectsCount: 0,
+    connectionsCount: 0,
+    achievementsCount: 0,
     aboutMySelf: '',
     email: 'aigerim.k@kbtu.kz',
     github: '@aigerim_dev',
@@ -145,8 +150,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: 'Редактировать профиль',
                       iconColor: Color(0xFF7C3AED),
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Редактирование профиля')),
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(content: Text('Редактирование профиля')),
+                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditProfileScreen(),
+                          ),
                         );
                       },
                     ),
@@ -293,6 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GestureDetector(
                   onTap: () {
                     print('[AUTH] User logged out');
+                    context.read<MyAuthProvider>().signOut();
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 14),

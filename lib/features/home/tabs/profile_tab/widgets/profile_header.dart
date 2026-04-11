@@ -135,16 +135,26 @@ class ProfileHeader extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
-            children: user.stats
-                .map(
-                  (stat) => StatCard(
-                    icon: stat.icon,
-                    value: stat.value.toString(),
-                    label: stat.title,
-                    iconColor: stat.iconColor,
-                  ),
-                )
-                .toList(),
+            children: [
+              StatCard(
+                icon: Icons.track_changes,
+                value: user.projectsCount.toString(),
+                label: 'Projects',
+                iconColor: Color(0xFF2563EB),
+              ),
+              StatCard(
+                icon: Icons.people_outline,
+                value: user.connectionsCount.toString(),
+                label: 'Connections',
+                iconColor: Color(0xFF7C3AED),
+              ),
+              StatCard(
+                icon: Icons.emoji_events_outlined,
+                value: user.achievementsCount.toString(),
+                label: 'Achievements',
+                iconColor: Color(0xFFDB2777),
+              ),
+            ],
           ),
         ),
       ],

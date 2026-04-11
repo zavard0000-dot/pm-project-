@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
+import 'package:teamup/providers/my_auth_provider.dart';
 import '../widgets/widgets.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -60,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                 Text(
+                Text(
                   'Join us!!',
                   style: AppTextStyles.displayLarge.copyWith(
                     color: Colors.white,
@@ -125,18 +127,57 @@ class _SignupScreenState extends State<SignupScreen> {
                             controller: _confirmPasswordEditController,
                             error: _signupErrors['confirmPassword'],
                           ),
-                          const SizedBox(height: 16),
-                          PrimaryButton(
-                            text: 'Create an account',
-                            icon: Icons.person_add_alt,
-                            onPressed: () => _register(
-                              context,
-                              _fullNameEditController.text,
-                              _emailEditController.text,
-                              _selectedUniversity,
-                              _passwordEditController.text,
-                              _confirmPasswordEditController.text,
+
+                          // Firebase error message
+                          if (_signupErrors.containsKey("firebase"))
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.errorRed.withOpacity(0.1),
+                                border: Border.all(color: AppColors.errorRed),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: AppColors.errorRed,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _signupErrors["firebase"]!,
+                                      style: const TextStyle(
+                                        color: AppColors.errorRed,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                          const SizedBox(height: 16),
+                          Consumer<MyAuthProvider>(
+                            builder: (context, authProvider, child) {
+                              return PrimaryButton(
+                                text: authProvider.isLoading
+                                    ? 'Creating account...'
+                                    : 'Create an account',
+                                icon: Icons.person_add_alt,
+                                onPressed: authProvider.isLoading
+                                    ? null
+                                    : () => _register(
+                                        context,
+                                        _fullNameEditController.text,
+                                        _emailEditController.text,
+                                        _selectedUniversity,
+                                        _passwordEditController.text,
+                                        _confirmPasswordEditController.text,
+                                      ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -167,22 +208,54 @@ class _SignupScreenState extends State<SignupScreen> {
     String? university,
     String password,
     String confirmPassword,
-  ) {
+  ) async {
+    // Clear previous errors
     setState(() {
-      _signupErrors = _checkValidation(
-        fullName,
-        email,
-        university,
-        password,
-        confirmPassword,
-      );
+      _signupErrors.remove('firebase');
     });
 
-    if (_signupErrors.isEmpty) {
+    // Validate form
+    final validationErrors = _checkValidation(
+      fullName,
+      email,
+      university,
+      password,
+      confirmPassword,
+    );
+
+    setState(() {
+      _signupErrors = validationErrors;
+    });
+
+    if (validationErrors.isNotEmpty) {
+      print('[SignupScreen] Validation failed: $validationErrors');
+      return;
+    }
+
+    print('[SignupScreen] Starting registration...');
+
+    // Firebase sign up with provider
+    final authProvider = context.read<MyAuthProvider>();
+    final success = await authProvider.signUp(
+      email: email,
+      password: password,
+      fullName: fullName,
+      university: university!,
+    );
+
+    if (success && mounted) {
+      print('[SignupScreen] Registration successful, navigating to MainScreen');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const MainScreen()),
       );
+    } else if (mounted) {
+      // Show Firebase error
+      final errorMessage = authProvider.error ?? "Sign up failed";
+      print('[SignupScreen] Registration failed: $errorMessage');
+      setState(() {
+        _signupErrors["firebase"] = errorMessage;
+      });
     }
   }
 
@@ -195,20 +268,32 @@ class _SignupScreenState extends State<SignupScreen> {
   ) {
     final Map<String, String> errors = {};
 
-    if (fullName.trim().length < 3) {
-      errors['fullName'] = 'full name is too short';
+    if (fullName.trim().isEmpty) {
+      errors['fullName'] = 'Full name is required';
+    } else if (fullName.trim().length < 3) {
+      errors['fullName'] = 'Full name is too short';
     }
-    if (!isEmail(email.trim())) {
-      errors['email'] = 'email is incorrect';
+
+    if (email.trim().isEmpty) {
+      errors['email'] = 'Email is required';
+    } else if (!isEmail(email.trim())) {
+      errors['email'] = 'Email is incorrect';
     }
+
     if (university == null || university.isEmpty) {
-      errors['university'] = 'select your university';
+      errors['university'] = 'Select your university';
     }
-    if (password.length < 8) {
-      errors['password'] = 'password is too short';
+
+    if (password.isEmpty) {
+      errors['password'] = 'Password is required';
+    } else if (password.length < 8) {
+      errors['password'] = 'Password is too short (minimum 8 characters)';
     }
-    if (confirmPassword != password) {
-      errors['confirmPassword'] = 'passwords do not match';
+
+    if (confirmPassword.isEmpty) {
+      errors['confirmPassword'] = 'Confirm password is required';
+    } else if (confirmPassword != password) {
+      errors['confirmPassword'] = 'Passwords do not match';
     }
 
     return errors;

@@ -1,4 +1,3 @@
-import 'profile_stat_model.dart';
 import 'current_project_model.dart';
 
 class MyUser {
@@ -9,7 +8,9 @@ class MyUser {
     required this.universityName,
     required this.currentCourse,
     required this.professionName,
-    required this.stats,
+    required this.projectsCount,
+    required this.connectionsCount,
+    required this.achievementsCount,
     required this.aboutMySelf,
     required this.email,
     required this.github,
@@ -25,7 +26,9 @@ class MyUser {
   final String universityName;
   final int currentCourse;
   final String professionName;
-  final List<ProfileStatModel> stats;
+  final int projectsCount;
+  final int connectionsCount;
+  final int achievementsCount;
   final String aboutMySelf;
   final String email;
   final String github;

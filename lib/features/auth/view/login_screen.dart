@@ -2,10 +2,12 @@
 // 📂 screens/auth/login_screen.dart
 // ==========================================
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamup/features/auth/view/signup_screen.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
+import 'package:teamup/providers/my_auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +22,7 @@ class _loginScreenState extends State<LoginScreen> {
     text: "a@a.com",
   );
   final TextEditingController _passwordEditController = TextEditingController(
-    text: "asdasdasdas",
+    text: "11111111",
   );
 
   @override
@@ -116,6 +118,36 @@ class _loginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 16),
 
+                          // Firebase error message
+                          if (_loginErrors.containsKey("firebase"))
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.errorRed.withOpacity(0.1),
+                                border: Border.all(color: AppColors.errorRed),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: AppColors.errorRed,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _loginErrors["firebase"]!,
+                                      style: const TextStyle(
+                                        color: AppColors.errorRed,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           //btn login
                           PrimaryButton(
                             text: 'Login',
@@ -206,24 +238,36 @@ class _loginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _login(BuildContext context, String email, String password) {
+  void _login(BuildContext context, String email, String password) async {
+    // Basic validation
+    Map<String, String> errors = {};
+    if (!isEmail(email)) errors["email"] = "Email is incorrect";
+    if (password.isEmpty) errors["password"] = "Password cannot be empty";
+    if (password.length < 8 && password.isNotEmpty) {
+      errors["password"] = "Password is too short";
+    }
+
     setState(() {
-      _loginErrors = _checkValidation(email, password);
+      _loginErrors = errors;
     });
 
-    if (_loginErrors.isEmpty) {
+    if (errors.isNotEmpty) return;
+
+    // Firebase sign in
+    final authProvider = context.read<MyAuthProvider>();
+    final success = await authProvider.signIn(email, password);
+
+    if (success && mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const MainScreen()),
       );
+    } else if (mounted) {
+      // Show error from provider
+      setState(() {
+        _loginErrors["firebase"] = authProvider.error ?? "Login failed";
+      });
     }
-  }
-
-  Map<String, String> _checkValidation(String email, String password) {
-    Map<String, String> errors = {};
-    if (!isEmail(email)) errors["email"] = "email is incorrect";
-    if (password.length < 8) errors["password"] = 'password is too short';
-    return errors;
   }
 
   bool isEmail(String email) {
