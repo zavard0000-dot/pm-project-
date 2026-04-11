@@ -9,11 +9,20 @@ class SkillsRequiredCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('💼 Skills and technologies', style: AppTextStyles.headingSmall),
+          Text(
+            '💼 Skills and technologies',
+            style: AppTextStyles.headingSmall.copyWith(
+              color: isDarkMode
+                  ? AppColors.darkTextPrimary
+                  : AppColors.textPrimary,
+            ),
+          ),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -26,13 +35,24 @@ class SkillsRequiredCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBlue.withOpacity(0.1),
+                      color: isDarkMode
+                          ? AppColors.darkSurfaceVariant.withOpacity(0.5)
+                          : AppColors.primaryBlue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppColors.primaryBlue.withOpacity(0.3),
+                        color: isDarkMode
+                            ? AppColors.primaryBlue.withOpacity(0.4)
+                            : AppColors.primaryBlue.withOpacity(0.3),
                       ),
                     ),
-                    child: Text(skill, style: AppTextStyles.tag),
+                    child: Text(
+                      skill,
+                      style: AppTextStyles.tag.copyWith(
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                 )
                 .toList(),

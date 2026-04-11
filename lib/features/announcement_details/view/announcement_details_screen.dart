@@ -9,8 +9,17 @@ class AnnouncementDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode
+        ? AppColors.darkBackground
+        : AppColors.background;
+
+    final gradientColors = isDarkMode
+        ? [Color.fromARGB(255, 23, 62, 148), Color.fromARGB(255, 81, 37, 156)]
+        : [AppColors.primaryBlue, AppColors.primaryPurple];
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: backgroundColor,
       body: CustomScrollView(
         slivers: [
           // Header
@@ -18,9 +27,9 @@ class AnnouncementDetailsScreen extends StatelessWidget {
             child: Container(
               width: double.infinity,
               // градиент
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.primaryBlue, AppColors.primaryPurple],
+                  colors: gradientColors,
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -61,13 +70,14 @@ class AnnouncementDetailsScreen extends StatelessWidget {
             child: Transform.translate(
               offset: const Offset(0, -8),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.background,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
                 ),
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
                 child: Column(
                   children: [
+                    SizedBox(height: 16),
                     AuthorCard(),
                     SizedBox(height: 14),
                     EventDetailsCard(),

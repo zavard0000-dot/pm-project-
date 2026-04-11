@@ -7,6 +7,8 @@ class AuthorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return BaseCard(
       child: Row(
         children: [
@@ -29,17 +31,35 @@ class AuthorCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Айгерім К.', style: AppTextStyles.headingLarge),
+                Text(
+                  'Айгерім К.',
+                  style: AppTextStyles.headingLarge.copyWith(
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : AppColors.textPrimary,
+                  ),
+                ),
                 SizedBox(height: 2),
-                Text('КБТУ, 3 курс', style: AppTextStyles.bodyMedium),
+                Text(
+                  'КБТУ, 3 курс',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : AppColors.textPrimary,
+                  ),
+                ),
                 SizedBox(height: 2),
                 Text(
                   'опубликовано 2 дня назад',
-                  style: AppTextStyles.captionMedium,
+                  style: AppTextStyles.captionMedium.copyWith(
+                    color: isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
