@@ -13,6 +13,7 @@ class CustomTextField extends StatefulWidget {
     this.controller = null,
     this.error = null,
     this.onChanged = null,
+    this.isRequired = false,
   });
 
   final String? title;
@@ -24,6 +25,7 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? error;
   final ValueChanged<String>? onChanged;
+  final bool isRequired;
 
   @override
   State<CustomTextField> createState() => _CustomeTextFieldState();
@@ -41,13 +43,22 @@ class _CustomeTextFieldState extends State<CustomTextField> {
       children: [
         if (widget.title != null)
           Container(
-            child: Text(
-              widget.title!,
-              style: AppTextStyles.labelLarge.copyWith(
-                color: isDarkMode
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  widget.title!,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : AppColors.textPrimary,
+                  ),
+                ),
+                if (widget.isRequired)
+                  Text(
+                    ' *',
+                    style: AppTextStyles.labelLarge.copyWith(color: Colors.red),
+                  ),
+              ],
             ),
             margin: EdgeInsets.only(bottom: 8),
           ),

@@ -18,33 +18,62 @@ class AdTypeSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Ad type',
-          style: AppTextStyles.labelLarge.copyWith(
-            color: isDarkMode
-                ? AppColors.darkTextPrimary
-                : AppColors.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(
-              child: _AdTypeButton(
-                icon: Icons.people,
-                label: 'Looking for a teammates',
-                isSelected: selectedType == 'teammates',
-                onTap: () => onTypeChanged('teammates'),
+            Text(
+              'Ad type',
+              style: AppTextStyles.labelLarge.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _AdTypeButton(
-                icon: Icons.person,
-                label: 'Looking for a party',
-                isSelected: selectedType == 'party',
-                onTap: () => onTypeChanged('party'),
-              ),
+            Text(
+              ' *',
+              style: AppTextStyles.labelLarge.copyWith(color: Colors.red),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Column(
+          children: [
+            // First row: project and team
+            Row(
+              children: [
+                Expanded(
+                  child: _AdTypeButton(
+                    icon: Icons.folder,
+                    label: 'Project',
+                    isSelected: selectedType == 'project',
+                    onTap: () => onTypeChanged('project'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _AdTypeButton(
+                    icon: Icons.people,
+                    label: 'Team',
+                    isSelected: selectedType == 'team',
+                    onTap: () => onTypeChanged('team'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Second row: person
+            Row(
+              children: [
+                Expanded(
+                  child: _AdTypeButton(
+                    icon: Icons.person,
+                    label: 'Person',
+                    isSelected: selectedType == 'person',
+                    onTap: () => onTypeChanged('person'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Container()),
+              ],
             ),
           ],
         ),

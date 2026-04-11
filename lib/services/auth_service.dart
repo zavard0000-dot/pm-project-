@@ -24,6 +24,7 @@ class AuthService implements AuthInterface {
         if (data == null) {
           // User document doesn't exist yet, return basic user
           return MyUser(
+            uid: user.uid,
             fullName: user.displayName ?? "User",
             username: user.email ?? "username",
             avatarLink: user.photoURL ?? "avatarLink",
@@ -46,6 +47,7 @@ class AuthService implements AuthInterface {
 
         // Parse data from Firestore
         return MyUser(
+          uid: user.uid,
           fullName: data['fullName'] ?? "User",
           username: data['username'] ?? user.email ?? "username",
           avatarLink: data['avatarLink'] ?? "avatarLink",
@@ -68,6 +70,7 @@ class AuthService implements AuthInterface {
         print('[AuthService] Error fetching user data: $e');
         // Return basic user data if Firestore fetch fails
         return MyUser(
+          uid: user.uid,
           fullName: user.displayName ?? "User",
           username: user.email ?? "username",
           avatarLink: user.photoURL ?? "avatarLink",
@@ -228,6 +231,45 @@ class AuthService implements AuthInterface {
     required String currentPassword,
     required String newPassword,
   }) async {}
+
+  Future<String> saveAnnouncement({required Announcement announcement}) async {
+    try {
+      print('[AuthService] Attempting to save announcement');
+
+      final docRef = await firestore.collection('announcements').add({
+        'type': announcement.type,
+        'title': announcement.title,
+        'description': announcement.description,
+        'university': announcement.university,
+        'eventType': announcement.eventType,
+        'requiredSkills': announcement.requiredSkills,
+        'telegramLink': announcement.telegramLink,
+        'eventDateStart': announcement.eventDateStart?.toIso8601String(),
+        'eventDateEnd': announcement.eventDateEnd?.toIso8601String(),
+        'eventLocation': announcement.eventLocation,
+        'requiredTeamSize': announcement.requiredTeamSize,
+        'userId': announcement.userId,
+        'userName': announcement.userName,
+        'userCourse': announcement.userCourse,
+        'userUniversity': announcement.userUniversity,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      print(
+        '[AuthService] Announcement saved successfully with id: ${docRef.id}',
+      );
+      return docRef.id;
+    } on FirebaseException catch (e) {
+      print(
+        '[AuthService] Firebase error in saveAnnouncement - Code: ${e.code}, Message: ${e.message}',
+      );
+      rethrow;
+    } catch (e) {
+      print('[AuthService] Error in saveAnnouncement: $e');
+      rethrow;
+    }
+  }
 
   String _generateRandomUsername({int length = 12}) {
     const chars = 'abcdefghijklmnopqrstuvwxyz';

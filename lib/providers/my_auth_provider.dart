@@ -131,6 +131,7 @@ class MyAuthProvider extends ChangeNotifier {
       // Update current user with new data
       if (_currentUser != null) {
         _currentUser = MyUser(
+          uid: _currentUser!.uid,
           fullName: fullName,
           username: _currentUser!.username,
           avatarLink: _currentUser!.avatarLink,
@@ -178,6 +179,26 @@ class MyAuthProvider extends ChangeNotifier {
       _isLoading = false;
       _error = _parseError(e.toString());
       notifyListeners();
+    }
+  }
+
+  // Save Announcement
+  Future<bool> saveAnnouncement(Announcement announcement) async {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      await _authService.saveAnnouncement(announcement: announcement);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _error = _parseError(e.toString());
+      notifyListeners();
+      return false;
     }
   }
 

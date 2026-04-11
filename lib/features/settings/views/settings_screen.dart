@@ -27,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   final user = MyUser(
+    uid: 'user_example_123',
     fullName: 'Айгерім Калиева',
     username: '@aigerim_dev',
     avatarLink: 'https://i.pravatar.cc/150?img=5',

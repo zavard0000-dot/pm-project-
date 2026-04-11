@@ -1,6 +1,6 @@
-
 class MyUser {
   const MyUser({
+    required this.uid,
     required this.fullName,
     required this.username,
     required this.avatarLink,
@@ -20,6 +20,7 @@ class MyUser {
     this.availability = 'available',
   });
 
+  final String uid;
   final String fullName;
   final String username;
   final String avatarLink;

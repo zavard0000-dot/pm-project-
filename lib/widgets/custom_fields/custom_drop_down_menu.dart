@@ -9,6 +9,7 @@ class CustomDropDownMenu extends StatefulWidget {
     this.value,
     this.onChanged,
     required this.dropDownMenuEntries,
+    this.isRequired = false,
   });
 
   final String? title;
@@ -16,6 +17,7 @@ class CustomDropDownMenu extends StatefulWidget {
   final String? value;
   final ValueChanged<String?>? onChanged;
   final List<DropdownMenuEntry<String>> dropDownMenuEntries;
+  final bool isRequired;
 
   @override
   State<CustomDropDownMenu> createState() => _CustomDropDownMenuState();
@@ -39,13 +41,22 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
         //title
         if (widget.title != null)
           Container(
-            child: Text(
-              widget.title!,
-              style: AppTextStyles.labelLarge.copyWith(
-                color: isDarkMode
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  widget.title!,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: isDarkMode
+                        ? AppColors.darkTextPrimary
+                        : AppColors.textPrimary,
+                  ),
+                ),
+                if (widget.isRequired)
+                  Text(
+                    ' *',
+                    style: AppTextStyles.labelLarge.copyWith(color: Colors.red),
+                  ),
+              ],
             ),
             margin: EdgeInsets.only(bottom: 8),
           ),
