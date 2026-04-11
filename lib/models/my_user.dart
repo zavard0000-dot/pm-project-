@@ -15,6 +15,7 @@ class MyUser {
     required this.github,
     required this.linkedin,
     required this.location,
+    required this.telegram,
     required this.hardSkills,
     required this.currentProjects,
     this.availability = 'available',
@@ -35,6 +36,7 @@ class MyUser {
   final String github;
   final String linkedin;
   final String location;
+  final String telegram;
   final List<String> hardSkills;
   final List<String> currentProjects;
   final String availability;

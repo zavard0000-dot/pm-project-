@@ -60,6 +60,7 @@ class MyAuthProvider extends ChangeNotifier {
     required String password,
     required String fullName,
     required String university,
+    required String telegram,
   }) async {
     try {
       _isLoading = true;
@@ -75,6 +76,7 @@ class MyAuthProvider extends ChangeNotifier {
           fullName: fullName,
           university: university,
           email: email,
+          telegram: telegram,
         );
       }
 
@@ -99,6 +101,7 @@ class MyAuthProvider extends ChangeNotifier {
     required String github,
     required String linkedin,
     required String location,
+    required String telegram,
     required String aboutMySelf,
     required List<String> hardSkills,
     required String availability,
@@ -123,6 +126,7 @@ class MyAuthProvider extends ChangeNotifier {
         github: github,
         linkedin: linkedin,
         location: location,
+        telegram: telegram,
         aboutMySelf: aboutMySelf,
         hardSkills: hardSkills,
         availability: availability,
@@ -146,6 +150,7 @@ class MyAuthProvider extends ChangeNotifier {
           github: github,
           linkedin: linkedin,
           location: location,
+          telegram: telegram,
           hardSkills: hardSkills,
           currentProjects: _currentUser!.currentProjects,
           availability: availability,

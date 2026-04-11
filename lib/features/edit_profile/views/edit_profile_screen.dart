@@ -23,6 +23,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController githubController;
   late TextEditingController linkedinController;
   late TextEditingController cityController;
+  late TextEditingController telegramController;
 
   String selectedUniversity = 'kbtu';
   String selectedCourse = '1';
@@ -48,6 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     githubController = TextEditingController(text: user?.github ?? '');
     linkedinController = TextEditingController(text: user?.linkedin ?? '');
     cityController = TextEditingController(text: user?.location ?? '');
+    telegramController = TextEditingController(text: user?.telegram ?? '');
 
     selectedUniversity = user?.universityName.toLowerCase() ?? 'kbtu';
     selectedCourse = user?.currentCourse.toString() ?? '1';
@@ -65,6 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     githubController.dispose();
     linkedinController.dispose();
     cityController.dispose();
+    telegramController.dispose();
     super.dispose();
   }
 
@@ -88,6 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       github: githubController.text.trim(),
       linkedin: linkedinController.text.trim(),
       location: cityController.text.trim(),
+      telegram: telegramController.text.trim(),
       aboutMySelf: aboutController.text.trim(),
       hardSkills: selectedSkills.toList(),
       availability: selectedAvailability,
@@ -212,6 +216,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         controller: emailController,
                         hint: "a@a.com",
                         title: "Email",
+                      ),
+                      CustomTextField(
+                        controller: telegramController,
+                        hint: "@yourname or your telegram ID",
+                        title: "Telegram",
                       ),
                       CustomTextField(
                         controller: githubController,

@@ -22,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordEditController = TextEditingController();
   final TextEditingController _confirmPasswordEditController =
       TextEditingController();
+  final TextEditingController _telegramEditController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailEditController.dispose();
     _passwordEditController.dispose();
     _confirmPasswordEditController.dispose();
+    _telegramEditController.dispose();
     super.dispose();
   }
 
@@ -112,6 +114,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             },
                           ),
                           CustomTextField(
+                            title: 'Telegram',
+                            hint: '@yourname or your telegram ID',
+                            prefixIcon: Icons.send_outlined,
+                            controller: _telegramEditController,
+                            error: _signupErrors['telegram'],
+                          ),
+                          CustomTextField(
                             title: 'Password',
                             hint: 'minimum 8 characters',
                             prefixIcon: Icons.lock_outline,
@@ -175,6 +184,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         _selectedUniversity,
                                         _passwordEditController.text,
                                         _confirmPasswordEditController.text,
+                                        _telegramEditController.text,
                                       ),
                               );
                             },
@@ -208,6 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
     String? university,
     String password,
     String confirmPassword,
+    String telegram,
   ) async {
     // Clear previous errors
     setState(() {
@@ -221,6 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
       university,
       password,
       confirmPassword,
+      telegram,
     );
 
     setState(() {
@@ -241,6 +253,7 @@ class _SignupScreenState extends State<SignupScreen> {
       password: password,
       fullName: fullName,
       university: university!,
+      telegram: telegram,
     );
 
     if (success && mounted) {
@@ -265,6 +278,7 @@ class _SignupScreenState extends State<SignupScreen> {
     String? university,
     String password,
     String confirmPassword,
+    String telegram,
   ) {
     final Map<String, String> errors = {};
 
@@ -294,6 +308,10 @@ class _SignupScreenState extends State<SignupScreen> {
       errors['confirmPassword'] = 'Confirm password is required';
     } else if (confirmPassword != password) {
       errors['confirmPassword'] = 'Passwords do not match';
+    }
+
+    if (telegram.trim().isEmpty) {
+      errors['telegram'] = 'Telegram is required';
     }
 
     return errors;
