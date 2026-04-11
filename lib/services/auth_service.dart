@@ -40,6 +40,7 @@ class AuthService implements AuthInterface {
             location: "",
             hardSkills: [],
             currentProjects: [],
+            availability: 'available',
           );
         }
 
@@ -70,6 +71,7 @@ class AuthService implements AuthInterface {
                   )
                   .toList() ??
               [],
+          availability: data['availability'] ?? 'available',
         );
       } catch (e) {
         print('[AuthService] Error fetching user data: $e');
@@ -91,6 +93,7 @@ class AuthService implements AuthInterface {
           location: "",
           hardSkills: [],
           currentProjects: [],
+          availability: 'available',
         );
       }
     });
@@ -146,6 +149,7 @@ class AuthService implements AuthInterface {
         'location': '',
         'hardSkills': [],
         'currentProjects': [],
+        'availability': 'available',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -164,6 +168,54 @@ class AuthService implements AuthInterface {
 
   Future<void> updateUsername({required String newname}) async {
     await getCurrentUser!.updateDisplayName(newname);
+  }
+
+  Future<void> updateUserProfile({
+    required String userId,
+    required String fullName,
+    required String university,
+    required int currentCourse,
+    required String professionName,
+    required String email,
+    required String github,
+    required String linkedin,
+    required String location,
+    required String aboutMySelf,
+    required List<String> hardSkills,
+    required String availability,
+  }) async {
+    try {
+      print(
+        '[AuthService] Attempting to update user profile for userId: $userId',
+      );
+
+      await firestore.collection('users').doc(userId).set({
+        'fullName': fullName,
+        'universityName': university,
+        'currentCourse': currentCourse,
+        'professionName': professionName,
+        'email': email,
+        'github': github,
+        'linkedin': linkedin,
+        'location': location,
+        'aboutMySelf': aboutMySelf,
+        'hardSkills': hardSkills,
+        'availability': availability,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      print(
+        '[AuthService] User profile updated successfully for userId: $userId',
+      );
+    } on FirebaseException catch (e) {
+      print(
+        '[AuthService] Firebase error in updateUserProfile - Code: ${e.code}, Message: ${e.message}',
+      );
+      rethrow;
+    } catch (e) {
+      print('[AuthService] Error in updateUserProfile: $e');
+      rethrow;
+    }
   }
 
   Future<void> resetPassword({required String email}) async {

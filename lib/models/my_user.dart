@@ -18,6 +18,7 @@ class MyUser {
     required this.location,
     required this.hardSkills,
     required this.currentProjects,
+    this.availability = 'available',
   });
 
   final String fullName;
@@ -36,4 +37,5 @@ class MyUser {
   final String location;
   final List<String> hardSkills;
   final List<CurrentProjectModel> currentProjects;
+  final String availability;
 }

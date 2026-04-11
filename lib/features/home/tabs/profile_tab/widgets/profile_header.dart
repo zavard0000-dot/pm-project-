@@ -111,15 +111,15 @@ class ProfileHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.check_circle_outline,
-                      color: Color(0xFF7C3AED),
+                      _getAvailabilityIcon(user.availability),
+                      color: _getAvailabilityColor(user.availability),
                       size: 16,
                     ),
                     SizedBox(width: 4),
                     Text(
-                      'Available for projects',
+                      _getAvailabilityLabel(user.availability),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.primaryPurple,
+                        color: _getAvailabilityColor(user.availability),
                       ),
                     ),
                   ],
@@ -159,5 +159,44 @@ class ProfileHeader extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _getAvailabilityLabel(String status) {
+    switch (status.toLowerCase()) {
+      case 'available':
+        return 'Available for projects';
+      case 'busy':
+        return 'Busy at the moment';
+      case 'unavailable':
+        return 'Not available';
+      default:
+        return 'Available for projects';
+    }
+  }
+
+  Color _getAvailabilityColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'available':
+        return Color(0xFF7C3AED);
+      case 'busy':
+        return Colors.orange;
+      case 'unavailable':
+        return Colors.red;
+      default:
+        return Color(0xFF7C3AED);
+    }
+  }
+
+  IconData _getAvailabilityIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'available':
+        return Icons.check_circle_outline;
+      case 'busy':
+        return Icons.schedule;
+      case 'unavailable':
+        return Icons.cancel;
+      default:
+        return Icons.check_circle_outline;
+    }
   }
 }

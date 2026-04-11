@@ -33,25 +33,29 @@ class ContactsCard extends StatelessWidget {
           const SizedBox(height: 16),
           _ContactItem(
             icon: Icons.email_outlined,
-            label: email,
+            label: email.isEmpty ? 'Not provided' : email,
+            isPlaceholder: email.isEmpty,
             color: AppColors.primaryBlue,
           ),
           const SizedBox(height: 12),
           _ContactItem(
             icon: Icons.code,
-            label: github,
+            label: github.isEmpty ? 'Not provided' : github,
+            isPlaceholder: github.isEmpty,
             color: isDarkMode ? AppColors.darkTextPrimary : Colors.black87,
           ),
           const SizedBox(height: 12),
           _ContactItem(
             icon: Icons.business,
-            label: linkedin,
+            label: linkedin.isEmpty ? 'Not provided' : linkedin,
+            isPlaceholder: linkedin.isEmpty,
             color: Color(0xFF0077B5),
           ),
           const SizedBox(height: 12),
           _ContactItem(
             icon: Icons.location_on_outlined,
-            label: location,
+            label: location.isEmpty ? 'Not provided' : location,
+            isPlaceholder: location.isEmpty,
             color: Colors.green,
           ),
         ],
@@ -63,11 +67,13 @@ class ContactsCard extends StatelessWidget {
 class _ContactItem extends StatelessWidget {
   final IconData icon;
   final String label;
+  final bool isPlaceholder;
   final Color color;
 
   const _ContactItem({
     required this.icon,
     required this.label,
+    required this.isPlaceholder,
     required this.color,
   });
 
@@ -82,9 +88,20 @@ class _ContactItem extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: isDarkMode
-                ? AppTextStyles.darkBodyMedium
-                : AppTextStyles.bodyMedium,
+            style:
+                (isDarkMode
+                        ? AppTextStyles.darkBodyMedium
+                        : AppTextStyles.bodyMedium)
+                    .copyWith(
+                      color: isPlaceholder
+                          ? (isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : AppColors.textSecondary)
+                          : null,
+                      fontStyle: isPlaceholder
+                          ? FontStyle.italic
+                          : FontStyle.normal,
+                    ),
             overflow: TextOverflow.ellipsis,
           ),
         ),

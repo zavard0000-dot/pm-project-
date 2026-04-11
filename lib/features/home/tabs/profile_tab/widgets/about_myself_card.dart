@@ -10,6 +10,10 @@ class AboutMyselfCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final displayContent = content.isEmpty
+        ? 'No information provided yet. Add a description in your profile settings.'
+        : content;
+    final isPlaceholder = content.isEmpty;
 
     return BaseCard(
       child: Column(
@@ -23,10 +27,21 @@ class AboutMyselfCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            content,
-            style: isDarkMode
-                ? AppTextStyles.darkBodyMedium
-                : AppTextStyles.captionLarge,
+            displayContent,
+            style:
+                (isDarkMode
+                        ? AppTextStyles.darkBodyMedium
+                        : AppTextStyles.captionLarge)
+                    .copyWith(
+                      color: isPlaceholder
+                          ? (isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : AppColors.textSecondary)
+                          : null,
+                      fontStyle: isPlaceholder
+                          ? FontStyle.italic
+                          : FontStyle.normal,
+                    ),
           ),
         ],
       ),

@@ -6,7 +6,9 @@ class MyAuthProvider extends ChangeNotifier {
   final AuthService _authService;
 
   MyAuthProvider({required AuthService authService})
-    : _authService = authService;
+    : _authService = authService {
+    _subscribeToAuthState();
+  }
 
   bool _isLoading = false;
   String? _error;
@@ -17,6 +19,14 @@ class MyAuthProvider extends ChangeNotifier {
   String? get error => _error;
   MyUser? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
+
+  // Subscribe to auth state changes
+  void _subscribeToAuthState() {
+    _authService.onAuthStateChanged.listen((user) {
+      _currentUser = user;
+      notifyListeners();
+    });
+  }
 
   // Clear error
   void clearError() {
@@ -69,6 +79,80 @@ class MyAuthProvider extends ChangeNotifier {
       }
 
       _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _error = _parseError(e.toString());
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Update User Profile
+  Future<bool> updateUserProfile({
+    required String fullName,
+    required String university,
+    required int currentCourse,
+    required String professionName,
+    required String email,
+    required String github,
+    required String linkedin,
+    required String location,
+    required String aboutMySelf,
+    required List<String> hardSkills,
+    required String availability,
+  }) async {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      final firebaseUser = _authService.getCurrentUser;
+      if (firebaseUser == null) {
+        throw Exception('User not authenticated');
+      }
+
+      await _authService.updateUserProfile(
+        userId: firebaseUser.uid,
+        fullName: fullName,
+        university: university,
+        currentCourse: currentCourse,
+        professionName: professionName,
+        email: email,
+        github: github,
+        linkedin: linkedin,
+        location: location,
+        aboutMySelf: aboutMySelf,
+        hardSkills: hardSkills,
+        availability: availability,
+      );
+
+      // Update current user with new data
+      if (_currentUser != null) {
+        _currentUser = MyUser(
+          fullName: fullName,
+          username: _currentUser!.username,
+          avatarLink: _currentUser!.avatarLink,
+          universityName: university,
+          currentCourse: currentCourse,
+          professionName: professionName,
+          projectsCount: _currentUser!.projectsCount,
+          connectionsCount: _currentUser!.connectionsCount,
+          achievementsCount: _currentUser!.achievementsCount,
+          aboutMySelf: aboutMySelf,
+          email: email,
+          github: github,
+          linkedin: linkedin,
+          location: location,
+          hardSkills: hardSkills,
+          currentProjects: _currentUser!.currentProjects,
+          availability: availability,
+        );
+      }
+
+      _isLoading = false;
+      _error = null;
       notifyListeners();
       return true;
     } catch (e) {

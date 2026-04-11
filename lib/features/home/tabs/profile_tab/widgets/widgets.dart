@@ -6,3 +6,4 @@ export 'profile_header.dart';
 export 'contacts_card.dart';
 export 'about_myself_card.dart';
 export 'hard_skills_card.dart';
+export 'location_card.dart';

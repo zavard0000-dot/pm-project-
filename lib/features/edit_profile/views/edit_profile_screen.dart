@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamup/constances.dart';
 import 'package:teamup/features/edit_profile/widgets/availability_card.dart';
+import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import '../widgets/widgets.dart';
@@ -13,7 +15,99 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  int selectedAvailability = 0;
+  late TextEditingController fullNameController;
+  late TextEditingController nicknameController;
+  late TextEditingController specializationController;
+  late TextEditingController aboutController;
+  late TextEditingController emailController;
+  late TextEditingController githubController;
+  late TextEditingController linkedinController;
+  late TextEditingController cityController;
+
+  String selectedUniversity = 'kbtu';
+  String selectedCourse = '1';
+  String selectedAvailability = 'available';
+  Set<String> selectedSkills = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    final user = context.read<MyAuthProvider>().currentUser;
+
+    fullNameController = TextEditingController(text: user?.fullName ?? '');
+    nicknameController = TextEditingController(text: user?.username ?? '');
+    specializationController = TextEditingController(
+      text: user?.professionName ?? '',
+    );
+    aboutController = TextEditingController(text: user?.aboutMySelf ?? '');
+    emailController = TextEditingController(text: user?.email ?? '');
+    githubController = TextEditingController(text: user?.github ?? '');
+    linkedinController = TextEditingController(text: user?.linkedin ?? '');
+    cityController = TextEditingController(text: user?.location ?? '');
+
+    selectedUniversity = user?.universityName.toLowerCase() ?? 'kbtu';
+    selectedCourse = user?.currentCourse.toString() ?? '1';
+    selectedAvailability = user?.availability ?? 'available';
+    selectedSkills = Set<String>.from(user?.hardSkills ?? []);
+  }
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    nicknameController.dispose();
+    specializationController.dispose();
+    aboutController.dispose();
+    emailController.dispose();
+    githubController.dispose();
+    linkedinController.dispose();
+    cityController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveProfile() async {
+    final authProvider = context.read<MyAuthProvider>();
+    final user = authProvider.currentUser;
+
+    if (user == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('User not found')));
+      return;
+    }
+
+    final success = await authProvider.updateUserProfile(
+      fullName: fullNameController.text.trim(),
+      university: selectedUniversity,
+      currentCourse: int.parse(selectedCourse),
+      professionName: specializationController.text.trim(),
+      email: emailController.text.trim(),
+      github: githubController.text.trim(),
+      linkedin: linkedinController.text.trim(),
+      location: cityController.text.trim(),
+      aboutMySelf: aboutController.text.trim(),
+      hardSkills: selectedSkills.toList(),
+      availability: selectedAvailability,
+    );
+
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.error ?? 'Error updating profile'),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +122,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: EdgeInsets.zero,
         children: [
           EditProfileHeader(),
-
           SizedBox(height: 24),
-
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                //base information
+                // Base information
                 BaseCard(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   child: Column(
@@ -52,41 +144,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       SizedBox(height: 24),
                       CustomTextField(
+                        controller: fullNameController,
                         hint: "Ivan Ivanovich",
                         title: "Full name",
                       ),
-                      CustomTextField(hint: "aigerim_dev", title: "Nickname"),
+                      CustomTextField(
+                        controller: nicknameController,
+                        hint: "aigerim_dev",
+                        title: "Nickname",
+                      ),
                       CustomDropDownMenu(
                         title: "University",
                         dropDownMenuEntries:
                             UNIVERSITIES_DROP_DOWN_MENU_ENTRIES,
+                        value: selectedUniversity,
+                        onChanged: (value) {
+                          setState(() => selectedUniversity = value ?? 'kbtu');
+                        },
                       ),
                       CustomDropDownMenu(
                         title: "Course",
                         dropDownMenuEntries: COURSES_DROP_DOWN_MENU_ENTRIES,
+                        value: selectedCourse,
+                        onChanged: (value) {
+                          setState(() => selectedCourse = value ?? '1');
+                        },
                       ),
                       CustomTextField(
+                        controller: specializationController,
                         hint: "Computer Science",
                         title: "Specialization",
                       ),
                     ],
                   ),
                 ),
-
                 SizedBox(height: 24),
-                //about your self
+
+                // About yourself
                 BaseCard(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   child: CustomTextField(
+                    controller: aboutController,
                     hint: "Расскажи о себе...",
                     title: "📝 About yourself",
                     maxLength: 500,
                     maxLines: 5,
                   ),
                 ),
-
                 SizedBox(height: 24),
-                //contacts
+
+                // Contacts
                 BaseCard(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   child: Column(
@@ -101,35 +208,129 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       SizedBox(height: 24),
-
-                      CustomTextField(hint: "a@a.com", title: "Email"),
-                      CustomTextField(hint: "", title: "GitHub"),
-                      CustomTextField(hint: "", title: "LinkedIn"),
-                      CustomTextField(hint: "Алматы, Казахстан", title: "City"),
+                      CustomTextField(
+                        controller: emailController,
+                        hint: "a@a.com",
+                        title: "Email",
+                      ),
+                      CustomTextField(
+                        controller: githubController,
+                        hint: "",
+                        title: "GitHub",
+                      ),
+                      CustomTextField(
+                        controller: linkedinController,
+                        hint: "",
+                        title: "LinkedIn",
+                      ),
+                      CustomTextField(
+                        controller: cityController,
+                        hint: "Алматы, Казахстан",
+                        title: "City",
+                      ),
                     ],
                   ),
                 ),
-
-                //Availability card
                 SizedBox(height: 24),
+
+                // Hard Skills
+                BaseCard(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "🛠️ Hard Skills",
+                        style: AppTextStyles.headingMedium.copyWith(
+                          color: isDarkMode
+                              ? AppColors.darkTextPrimary
+                              : AppColors.textPrimary,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: AVAILABLE_SKILLS.map((skill) {
+                          final isSelected = selectedSkills.contains(skill);
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  selectedSkills.remove(skill);
+                                } else {
+                                  selectedSkills.add(skill);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Color(0xFF7C3AED)
+                                    : (isDarkMode
+                                          ? AppColors.darkSurfaceVariant
+                                          : AppColors.surface),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Color(0xFF7C3AED)
+                                      : (isDarkMode
+                                            ? Colors.white.withValues(
+                                                alpha: 0.1,
+                                              )
+                                            : Colors.grey.withValues(
+                                                alpha: 0.3,
+                                              )),
+                                ),
+                              ),
+                              child: Text(
+                                skill,
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : (isDarkMode
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.textPrimary),
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24),
+
+                // Availability card
                 AvailabilityCard(
-                  selectedIndex: selectedAvailability,
+                  selectedIndex: _getAvailabilityIndex(selectedAvailability),
                   onTap: (int index) {
                     setState(() {
-                      selectedAvailability = index;
+                      selectedAvailability = _getAvailabilityValue(index);
                     });
                   },
                 ),
-
-                //
                 SizedBox(height: 24),
-                PrimaryButton(
-                  text: "Save the changes",
-                  onPressed: () {
-                    Navigator.of(context).pop();
+
+                // Save button
+                Consumer<MyAuthProvider>(
+                  builder: (context, authProvider, _) {
+                    return PrimaryButton(
+                      text: authProvider.isLoading
+                          ? "Saving..."
+                          : "Save the changes",
+                      onPressed: authProvider.isLoading ? null : _saveProfile,
+                    );
                   },
                 ),
-
                 SizedBox(height: 80),
               ],
             ),
@@ -137,5 +338,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ],
       ),
     );
+  }
+
+  int _getAvailabilityIndex(String value) {
+    switch (value) {
+      case 'available':
+        return 0;
+      case 'busy':
+        return 1;
+      case 'unavailable':
+        return 2;
+      default:
+        return 0;
+    }
+  }
+
+  String _getAvailabilityValue(int index) {
+    switch (index) {
+      case 0:
+        return 'available';
+      case 1:
+        return 'busy';
+      case 2:
+        return 'unavailable';
+      default:
+        return 'available';
+    }
   }
 }
