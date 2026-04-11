@@ -26,6 +26,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final mainColor = (isDarkMode ? AppColors.darkBlue : AppColors.primaryBlue);
+
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -34,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
           if (index != 2) setState(() => _currentIndex = index);
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryBlue,
+        selectedItemColor: mainColor,
         unselectedItemColor: AppColors.textSecondary,
         showSelectedLabels: true,
         showUnselectedLabels: true,
@@ -60,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => setState(() => _currentIndex = 2),
-        backgroundColor: AppColors.primaryBlue,
+        backgroundColor: mainColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),

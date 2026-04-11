@@ -16,6 +16,7 @@ class AppColors {
   static const disabledGrey = Color(0xFF9CA3AF);
 
   // Dark theme colors
+  static const darkBlue = Color.fromARGB(255, 20, 58, 139);
   static const darkBackground = Color(0xFF0F172A);
   static const darkSurface = Color(0xFF1E293B);
   static const darkSurfaceVariant = Color(0xFF334155);

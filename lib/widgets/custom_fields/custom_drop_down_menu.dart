@@ -31,22 +31,35 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //title
         if (widget.title != null)
           Container(
-            child: Text(widget.title!, style: AppTextStyles.labelLarge),
+            child: Text(
+              widget.title!,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
+              ),
+            ),
             margin: EdgeInsets.only(bottom: 8),
           ),
         Container(
           //внешний отсут чье значение зависит от наличие ошибки у поле
           margin: EdgeInsets.only(bottom: widget.error != null ? 6 : 24),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: isDarkMode ? AppColors.darkSurface : AppColors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.inputBorder),
+            border: Border.all(
+              color: isDarkMode
+                  ? AppColors.darkInputBorder
+                  : AppColors.inputBorder,
+            ),
           ),
           child: DropdownMenu<String>(
             key: ValueKey(widget.value),
@@ -54,26 +67,33 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
             dropdownMenuEntries: widget.dropDownMenuEntries,
             initialSelection: widget.value,
             hintText: "Select University",
-            textStyle: AppTextStyles.bodyMedium,
+            textStyle: AppTextStyles.bodyMedium.copyWith(
+              color: isDarkMode
+                  ? AppColors.darkTextPrimary
+                  : AppColors.textPrimary,
+            ),
             menuStyle: MenuStyle(
-              backgroundColor: const WidgetStatePropertyAll(AppColors.surface),
+              backgroundColor: WidgetStatePropertyAll(
+                isDarkMode ? AppColors.darkSurface : AppColors.surface,
+              ),
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-            inputDecorationTheme: const InputDecorationTheme(
+            inputDecorationTheme: InputDecorationTheme(
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
-              hintStyle: AppTextStyles.hint,
+              hintStyle: AppTextStyles.hint.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
             ),
-            // onSelected: (value) {
-            //   widget.onChanged?.call(value);
-            // },
             onSelected: widget.onChanged,
           ),
         ),

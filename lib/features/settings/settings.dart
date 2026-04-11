@@ -1,2 +1,2 @@
-export 'tab_view/tab_view.dart';
+export 'views/views.dart';
 export 'widgets/widgets.dart';

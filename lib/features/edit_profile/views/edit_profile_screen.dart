@@ -17,8 +17,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode
+        ? AppColors.darkBackground
+        : AppColors.background;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: backgroundColor,
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -39,7 +44,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       Text(
                         "👤 Base information",
-                        style: AppTextStyles.headingMedium,
+                        style: AppTextStyles.headingMedium.copyWith(
+                          color: isDarkMode
+                              ? AppColors.darkTextPrimary
+                              : AppColors.textPrimary,
+                        ),
                       ),
                       SizedBox(height: 24),
                       CustomTextField(
@@ -83,7 +92,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("📝 Contacts", style: AppTextStyles.headingMedium),
+                      Text(
+                        "📝 Contacts",
+                        style: AppTextStyles.headingMedium.copyWith(
+                          color: isDarkMode
+                              ? AppColors.darkTextPrimary
+                              : AppColors.textPrimary,
+                        ),
+                      ),
                       SizedBox(height: 24),
 
                       CustomTextField(hint: "a@a.com", title: "Email"),

@@ -78,6 +78,8 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return ListView(
       padding: EdgeInsets.zero,
       children: [
@@ -86,101 +88,108 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
 
         const SizedBox(height: 32),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Ad Type Selector
-              AdTypeSelector(
-                selectedType: _selectedAdType,
-                onTypeChanged: (type) {
-                  setState(() {
-                    _selectedAdType = type;
-                  });
-                },
-              ),
-
-              // Ad Title
-              CustomTextField(
-                title: "Ad title",
-                hint:
-                    "For example: Looking for a Frontend Developer for a Hackathon",
-                controller: _adTitleController,
-                onChanged: (value) {
-                  setState(() {});
-                },
-              ),
-
-              // Description
-              CustomTextField(
-                title: "Description",
-                hint:
-                    "Tell us more about the project, its objectives, and requirements...",
-                controller: _descriptionController,
-                maxLength: 500,
-                maxLines: 5,
-                onChanged: (value) {
-                  setState(() {});
-                },
-              ),
-
-              // University
-              CustomDropDownMenu(
-                title: "University",
-                value: _selectedUniversity,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedUniversity = value;
-                  });
-                },
-                dropDownMenuEntries: UNIVERSITIES_DROP_DOWN_MENU_ENTRIES,
-              ),
-
-              // Event Type
-              CustomDropDownMenu(
-                title: "Event type",
-                value: _selectedEventType,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedEventType = value;
-                  });
-                },
-                dropDownMenuEntries: EVENTS_DROP_DOWN_MENU_ENTRIES,
-              ),
-
-              // Skills Selector
-              SkillsSelector(
-                selectedSkills: _selectedSkills,
-                onSkillsChanged: (skills) {
-                  setState(() {
-                    _selectedSkills = skills;
-                  });
-                },
-                availableSkills: AVAILABLE_SKILLS,
-                maxSkills: 8,
-              ),
-
-              // Info text
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: Text(
-                  'After publication, the ad will appear in the general feed',
-                  style: AppTextStyles.infoText,
+        Container(
+          color: isDarkMode ? AppColors.darkBackground : AppColors.background,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Ad Type Selector
+                AdTypeSelector(
+                  selectedType: _selectedAdType,
+                  onTypeChanged: (type) {
+                    setState(() {
+                      _selectedAdType = type;
+                    });
+                  },
                 ),
-              ),
 
-              // Create Button
-              Material(
-                child: PrimaryButton(
-                  text: "Create announcement",
-                  icon: Icons.star_border,
-                  onPressed: _isFormValid() ? _createAnnouncement : null,
+                // Ad Title
+                CustomTextField(
+                  title: "Ad title",
+                  hint:
+                      "For example: Looking for a Frontend Developer for a Hackathon",
+                  controller: _adTitleController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
-              ),
 
-              const SizedBox(height: 70),
-            ],
+                // Description
+                CustomTextField(
+                  title: "Description",
+                  hint:
+                      "Tell us more about the project, its objectives, and requirements...",
+                  controller: _descriptionController,
+                  maxLength: 500,
+                  maxLines: 5,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+
+                // University
+                CustomDropDownMenu(
+                  title: "University",
+                  value: _selectedUniversity,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedUniversity = value;
+                    });
+                  },
+                  dropDownMenuEntries: UNIVERSITIES_DROP_DOWN_MENU_ENTRIES,
+                ),
+
+                // Event Type
+                CustomDropDownMenu(
+                  title: "Event type",
+                  value: _selectedEventType,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedEventType = value;
+                    });
+                  },
+                  dropDownMenuEntries: EVENTS_DROP_DOWN_MENU_ENTRIES,
+                ),
+
+                // Skills Selector
+                SkillsSelector(
+                  selectedSkills: _selectedSkills,
+                  onSkillsChanged: (skills) {
+                    setState(() {
+                      _selectedSkills = skills;
+                    });
+                  },
+                  availableSkills: AVAILABLE_SKILLS,
+                  maxSkills: 8,
+                ),
+
+                // Info text
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Text(
+                    'After publication, the ad will appear in the general feed',
+                    style: AppTextStyles.infoText.copyWith(
+                      color: isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+
+                // Create Button
+                Material(
+                  child: PrimaryButton(
+                    text: "Create announcement",
+                    icon: Icons.star_border,
+                    onPressed: _isFormValid() ? _createAnnouncement : null,
+                  ),
+                ),
+
+                const SizedBox(height: 70),
+              ],
+            ),
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 
 class AvailabilityCard extends StatefulWidget {
@@ -27,6 +28,14 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final selectedColor = AppColors.primaryBlue;
+    final unselectedBorderColor = isDarkMode
+        ? AppColors.darkInputBorder
+        : const Color.fromARGB(255, 235, 236, 236);
+    final selectedBgColor = isDarkMode
+        ? AppColors.primaryBlue.withOpacity(0.2)
+        : Colors.blue[50];
 
     return BaseCard(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -35,7 +44,13 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         children: [
           Text(
             "🎯 доступность",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: isDarkMode
+                  ? AppColors.darkTextPrimary
+                  : AppColors.textPrimary,
+            ),
           ),
 
           SizedBox(height: 24),
@@ -53,14 +68,14 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
                 margin: EdgeInsets.only(bottom: 12),
                 decoration: (index == widget.selectedIndex
                     ? BoxDecoration(
-                        border: BoxBorder.all(width: 2, color: Colors.green),
-                        color: Colors.green[50],
+                        border: Border.all(width: 2, color: selectedColor),
+                        color: selectedBgColor,
                         borderRadius: BorderRadius.circular(16),
                       )
                     : BoxDecoration(
-                        border: BoxBorder.all(
+                        border: Border.all(
                           width: 2,
-                          color: theme.hintColor.withOpacity(0.5),
+                          color: unselectedBorderColor,
                         ),
                         borderRadius: BorderRadius.circular(16),
                       )),
@@ -72,9 +87,19 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary,
                       ),
                     ),
-                    Text(value["subtitle"]!),
+                    Text(
+                      value["subtitle"]!,
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),

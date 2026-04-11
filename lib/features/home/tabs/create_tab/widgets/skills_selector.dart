@@ -17,16 +17,29 @@ class SkillsSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Skills and technologies', style: AppTextStyles.labelLarge),
+            Text(
+              'Skills and technologies',
+              style: AppTextStyles.labelLarge.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
+              ),
+            ),
             Text(
               '${selectedSkills.length}/$maxSkills',
-              style: AppTextStyles.captionMedium,
+              style: AppTextStyles.captionMedium.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
             ),
           ],
         ),
@@ -58,15 +71,25 @@ class SkillsSelector extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.primaryBlue
+                      ? (isDarkMode
+                            ? AppColors.darkBlue
+                            : AppColors.primaryBlue)
                       : isDisabled
-                      ? AppColors.inputBorder
+                      ? isDarkMode
+                            ? AppColors.darkInputBorder
+                            : AppColors.inputBorder
                       : Colors.transparent,
                   border: Border.all(
                     color: isSelected
-                        ? AppColors.primaryBlue
+                        ? (isDarkMode
+                              ? AppColors.darkBlue
+                              : AppColors.primaryBlue)
                         : isDisabled
-                        ? AppColors.inputBorder
+                        ? isDarkMode
+                              ? AppColors.darkInputBorder
+                              : AppColors.inputBorder
+                        : isDarkMode
+                        ? AppColors.darkInputBorder
                         : AppColors.inputBorder,
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -78,6 +101,8 @@ class SkillsSelector extends StatelessWidget {
                         ? Colors.white
                         : isDisabled
                         ? AppColors.disabledGrey
+                        : isDarkMode
+                        ? AppColors.darkTextPrimary
                         : AppColors.textPrimary,
                   ),
                 ),

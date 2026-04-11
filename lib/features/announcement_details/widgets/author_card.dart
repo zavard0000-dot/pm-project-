@@ -17,6 +17,15 @@ class AuthorCard extends StatelessWidget {
               width: 58,
               height: 58,
               fit: BoxFit.cover,
+              //placeholder
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 58,
+                  height: 58,
+                  color: Colors.grey,
+                  child: Icon(Icons.person, color: Colors.white),
+                );
+              },
             ),
           ),
           const SizedBox(width: 12),

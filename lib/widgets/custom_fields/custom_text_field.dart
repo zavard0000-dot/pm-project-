@@ -34,21 +34,34 @@ class _CustomeTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.title != null)
           Container(
-            child: Text(widget.title!, style: AppTextStyles.labelLarge),
+            child: Text(
+              widget.title!,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
+              ),
+            ),
             margin: EdgeInsets.only(bottom: 8),
           ),
         Container(
           //внешний отсут чье значение зависит от наличие ошибки у поле
           margin: EdgeInsets.only(bottom: widget.error != null ? 6 : 24),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: isDarkMode ? AppColors.darkSurface : AppColors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.inputBorder),
+            border: Border.all(
+              color: isDarkMode
+                  ? AppColors.darkInputBorder
+                  : AppColors.inputBorder,
+            ),
           ),
           child: TextField(
             controller: widget.controller,
@@ -58,12 +71,18 @@ class _CustomeTextFieldState extends State<CustomTextField> {
             onChanged: widget.onChanged,
             decoration: InputDecoration(
               hintText: widget.hint,
-              hintStyle: AppTextStyles.hint,
+              hintStyle: AppTextStyles.hint.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
               prefixIcon: (widget.prefixIcon == null
                   ? null
                   : Icon(
                       widget.prefixIcon,
-                      color: AppColors.textSecondary,
+                      color: isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.textSecondary,
                       size: 20,
                     )),
               suffixIcon: widget.isPassword == false
@@ -73,6 +92,9 @@ class _CustomeTextFieldState extends State<CustomTextField> {
                         _obscureText
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
+                        color: isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.textSecondary,
                       ),
                       onPressed: () => (setState(() {
                         _obscureText = !_obscureText;

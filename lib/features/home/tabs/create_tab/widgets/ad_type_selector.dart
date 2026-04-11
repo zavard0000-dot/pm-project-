@@ -13,10 +13,19 @@ class AdTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Ad type', style: AppTextStyles.labelLarge),
+        Text(
+          'Ad type',
+          style: AppTextStyles.labelLarge.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextPrimary
+                : AppColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -60,13 +69,19 @@ class _AdTypeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? AppColors.primaryPurple : AppColors.inputBorder,
+            color: isSelected
+                ? AppColors.primaryPurple
+                : isDarkMode
+                ? AppColors.darkInputBorder
+                : AppColors.inputBorder,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
@@ -82,16 +97,26 @@ class _AdTypeButton extends StatelessWidget {
               height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected ? AppColors.primaryPurple : AppColors.surface,
+                color: isSelected
+                    ? AppColors.primaryPurple
+                    : isDarkMode
+                    ? AppColors.darkSurface
+                    : AppColors.surface,
                 border: Border.all(
                   color: isSelected
                       ? AppColors.primaryPurple
+                      : isDarkMode
+                      ? AppColors.darkInputBorder
                       : AppColors.inputBorder,
                 ),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? Colors.white : AppColors.textSecondary,
+                color: isSelected
+                    ? Colors.white
+                    : isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
@@ -101,6 +126,8 @@ class _AdTypeButton extends StatelessWidget {
               style: AppTextStyles.labelSmall.copyWith(
                 color: isSelected
                     ? AppColors.primaryPurple
+                    : isDarkMode
+                    ? AppColors.darkTextSecondary
                     : AppColors.textSecondary,
               ),
             ),
