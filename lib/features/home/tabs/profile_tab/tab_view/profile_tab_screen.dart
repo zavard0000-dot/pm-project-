@@ -73,10 +73,10 @@ class ProfileScreen extends StatelessWidget {
                     ...user.currentProjects.map((currentProject) {
                       return Column(
                         children: [
-                          CurrentProjectCard(
-                            title: currentProject.title,
-                            subtitle: currentProject.subtitle,
-                          ),
+                          // CurrentProjectCard(
+                          //   title: currentProject.title,
+                          //   subtitle: currentProject.subtitle,
+                          // ),
                           SizedBox(height: 8),
                         ],
                       );

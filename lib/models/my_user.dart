@@ -1,4 +1,3 @@
-import 'current_project_model.dart';
 
 class MyUser {
   const MyUser({
@@ -36,6 +35,6 @@ class MyUser {
   final String linkedin;
   final String location;
   final List<String> hardSkills;
-  final List<CurrentProjectModel> currentProjects;
+  final List<String> currentProjects;
   final String availability;
 }

@@ -61,16 +61,7 @@ class AuthService implements AuthInterface {
           linkedin: data['linkedin'] ?? "",
           location: data['location'] ?? "",
           hardSkills: List<String>.from(data['hardSkills'] ?? []),
-          currentProjects:
-              (data['currentProjects'] as List?)
-                  ?.map(
-                    (p) => CurrentProjectModel(
-                      title: p['title'] ?? "",
-                      subtitle: p['subtitle'] ?? "",
-                    ),
-                  )
-                  .toList() ??
-              [],
+          currentProjects: [],
           availability: data['availability'] ?? 'available',
         );
       } catch (e) {
