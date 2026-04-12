@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
+import 'package:teamup/router.dart';
 import 'package:teamup/features/settings/widgets/widgets.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
@@ -36,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Gradient Header with Profile
           Consumer<MyAuthProvider>(
             builder: (context, authProvider, child) {
-              final currentUser = authProvider.currentUser;
+              final currentUser = authProvider.user;
 
               return Container(
                 padding: const EdgeInsets.only(
@@ -168,15 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: 'Редактировать профиль',
                       iconColor: Color(0xFF7C3AED),
                       onTap: () {
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(content: Text('Редактирование профиля')),
-                        // );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditProfileScreen(),
-                          ),
-                        );
+                        context.go(AppRoutes.editProfile);
                       },
                     ),
                     SettingMenuItem(

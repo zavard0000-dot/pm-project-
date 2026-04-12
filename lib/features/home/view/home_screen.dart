@@ -7,14 +7,22 @@ import 'package:teamup/theme.dart';
 import 'package:teamup/features/home/tabs/tabs.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  final int initialTab;
+
+  const MainScreen({Key? key, this.initialTab = 0}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialTab;
+  }
 
   final List<Widget> _screens = [
     const FeedTabScreen(),

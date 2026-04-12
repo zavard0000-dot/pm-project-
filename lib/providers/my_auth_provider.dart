@@ -1,32 +1,59 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/services/auth_service.dart';
 
+enum AuthStatus { loading, authenticated, unauthenticated }
+
 class MyAuthProvider extends ChangeNotifier {
   final AuthService _authService;
 
+  AuthStatus _status = AuthStatus.loading;
+  MyUser? _user;
+  String? _error;
+  StreamSubscription<MyUser?>? _streamSubscription;
+
   MyAuthProvider({required AuthService authService})
     : _authService = authService {
-    _subscribeToAuthState();
+    // Подписываемся на стрим один раз при инициализации
+    _streamSubscription = _authService.onAuthStateChanged.listen(
+      (user) {
+        _user = user;
+
+        // 2. Логика смены статуса
+        if (user != null) {
+          _status = AuthStatus.authenticated;
+        } else {
+          _status = AuthStatus.unauthenticated;
+        }
+
+        _error = null;
+        notifyListeners();
+      },
+      onError: (e) {
+        print('[MyAuthProvider] Stream error: $e');
+        _error = 'Auth error: $e';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+      },
+    );
   }
 
-  bool _isLoading = false;
-  String? _error;
-  MyUser? _currentUser;
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
 
-  // Getters
-  bool get isLoading => _isLoading;
+  // Геттеры для UI
+  AuthStatus get status => _status;
+  MyUser? get user => _user;
   String? get error => _error;
-  MyUser? get currentUser => _currentUser;
-  bool get isAuthenticated => _currentUser != null;
 
-  // Subscribe to auth state changes
-  void _subscribeToAuthState() {
-    _authService.onAuthStateChanged.listen((user) {
-      _currentUser = user;
-      notifyListeners();
-    });
-  }
+  // Удобные хелперы, чтобы не писать проверки через Enum в UI
+  bool get isLoading => _status == AuthStatus.loading;
+  bool get isAuthenticated => _status == AuthStatus.authenticated;
 
   // Clear error
   void clearError() {
@@ -37,18 +64,16 @@ class MyAuthProvider extends ChangeNotifier {
   // Sign In
   Future<bool> signIn(String email, String password) async {
     try {
-      _isLoading = true;
+      _status = AuthStatus.loading;
       _error = null;
       notifyListeners();
 
       await _authService.signIn(email, password);
 
-      _isLoading = false;
-      notifyListeners();
       return true;
     } catch (e) {
-      _isLoading = false;
       _error = _parseError(e.toString());
+      _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
     }
@@ -63,16 +88,16 @@ class MyAuthProvider extends ChangeNotifier {
     required String telegram,
   }) async {
     try {
-      _isLoading = true;
+      _status = AuthStatus.loading;
       _error = null;
       notifyListeners();
 
       final credential = await _authService.createUser(email, password);
-      final user = credential.user;
+      final firebaseUser = credential.user;
 
-      if (user != null) {
+      if (firebaseUser != null) {
         await _authService.saveUserData(
-          userId: user.uid,
+          userId: firebaseUser.uid,
           fullName: fullName,
           university: university,
           email: email,
@@ -80,12 +105,10 @@ class MyAuthProvider extends ChangeNotifier {
         );
       }
 
-      _isLoading = false;
-      notifyListeners();
       return true;
     } catch (e) {
-      _isLoading = false;
       _error = _parseError(e.toString());
+      _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
     }
@@ -107,7 +130,6 @@ class MyAuthProvider extends ChangeNotifier {
     required String availability,
   }) async {
     try {
-      _isLoading = true;
       _error = null;
       notifyListeners();
 
@@ -132,37 +154,20 @@ class MyAuthProvider extends ChangeNotifier {
         availability: availability,
       );
 
-      // Update current user with new data
-      if (_currentUser != null) {
-        _currentUser = MyUser(
-          uid: _currentUser!.uid,
-          fullName: fullName,
-          username: _currentUser!.username,
-          avatarLink: _currentUser!.avatarLink,
-          universityName: university,
-          currentCourse: currentCourse,
-          professionName: professionName,
-          projectsCount: _currentUser!.projectsCount,
-          connectionsCount: _currentUser!.connectionsCount,
-          achievementsCount: _currentUser!.achievementsCount,
-          aboutMySelf: aboutMySelf,
-          email: email,
-          github: github,
-          linkedin: linkedin,
-          location: location,
-          telegram: telegram,
-          hardSkills: hardSkills,
-          currentProjects: _currentUser!.currentProjects,
-          availability: availability,
-        );
+      // После успешного обновления явно загружаем свежие данные из Firestore
+      // так как onAuthStateChanged не срабатывает при изменении данных в Firestore
+      final refreshedUser = await _authService.refreshUserData(
+        userId: firebaseUser.uid,
+      );
+
+      if (refreshedUser != null) {
+        _user = refreshedUser;
       }
 
-      _isLoading = false;
       _error = null;
       notifyListeners();
       return true;
     } catch (e) {
-      _isLoading = false;
       _error = _parseError(e.toString());
       notifyListeners();
       return false;
@@ -172,17 +177,15 @@ class MyAuthProvider extends ChangeNotifier {
   // Sign Out
   Future<void> signOut() async {
     try {
-      _isLoading = true;
+      _status = AuthStatus.loading;
       notifyListeners();
 
       await _authService.signOut();
-      _currentUser = null;
-
-      _isLoading = false;
-      notifyListeners();
+      // НЕ устанавливаем _user = null вручную!
+      // Стрим onAuthStateChanged вернёт null автоматически
     } catch (e) {
-      _isLoading = false;
       _error = _parseError(e.toString());
+      _status = AuthStatus.unauthenticated;
       notifyListeners();
     }
   }
@@ -190,18 +193,18 @@ class MyAuthProvider extends ChangeNotifier {
   // Save Announcement
   Future<bool> saveAnnouncement(Announcement announcement) async {
     try {
-      _isLoading = true;
+      // _status = AuthStatus.loading;
       _error = null;
       notifyListeners();
 
       await _authService.saveAnnouncement(announcement: announcement);
 
-      _isLoading = false;
+      // _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
     } catch (e) {
-      _isLoading = false;
       _error = _parseError(e.toString());
+      // _status = AuthStatus.authenticated;
       notifyListeners();
       return false;
     }

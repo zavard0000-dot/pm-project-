@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:teamup/features/announcement_details/view/view.dart';
+import 'package:go_router/go_router.dart';
+import 'package:teamup/router.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'telegram_btn.dart';
@@ -28,9 +29,7 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => AnnouncementDetailsScreen()));
+        context.go('/home/announcement/1');
       },
       child: BaseCard(
         margin: EdgeInsets.all(16).copyWith(top: 0),

@@ -219,6 +219,45 @@ class AuthService implements AuthInterface {
     }
   }
 
+  // Явное обновление данных пользователя из Firestore
+  // используется после обновления профиля, так как onAuthStateChanged не срабатывает при изменении данных в Firestore
+  Future<MyUser?> refreshUserData({required String userId}) async {
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user == null) return null;
+
+      final userDoc = await firestore.collection('users').doc(userId).get();
+      final data = userDoc.data();
+
+      if (data == null) return null;
+
+      return MyUser(
+        uid: user.uid,
+        fullName: data['fullName'] ?? "User",
+        username: data['username'] ?? user.email ?? "username",
+        avatarLink: data['avatarLink'] ?? "avatarLink",
+        universityName: data['universityName'] ?? "universityName",
+        currentCourse: data['currentCourse'] ?? 1,
+        professionName: data['professionName'] ?? "professionName",
+        projectsCount: data['projectsCount'] ?? 0,
+        connectionsCount: data['connectionsCount'] ?? 0,
+        achievementsCount: data['achievementsCount'] ?? 0,
+        aboutMySelf: data['aboutMySelf'] ?? "",
+        email: user.email ?? "",
+        github: data['github'] ?? "",
+        linkedin: data['linkedin'] ?? "",
+        location: data['location'] ?? "",
+        telegram: data['telegram'] ?? "",
+        hardSkills: List<String>.from(data['hardSkills'] ?? []),
+        currentProjects: [],
+        availability: data['availability'] ?? 'available',
+      );
+    } catch (e) {
+      print('[AuthService] Error in refreshUserData: $e');
+      return null;
+    }
+  }
+
   Future<void> resetPassword({required String email}) async {
     await firebaseAuth.sendPasswordResetEmail(email: email);
   }

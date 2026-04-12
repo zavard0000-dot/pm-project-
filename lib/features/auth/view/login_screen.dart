@@ -3,7 +3,8 @@
 // ==========================================
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamup/features/auth/view/signup_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:teamup/router.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
@@ -210,11 +211,7 @@ class _loginScreenState extends State<LoginScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => const SignupScreen(),
-                                    ),
-                                  );
+                                  context.go(AppRoutes.signup);
                                 },
                                 child: Text(
                                   'Sign up',
@@ -258,10 +255,7 @@ class _loginScreenState extends State<LoginScreen> {
     final success = await authProvider.signIn(email, password);
 
     if (success && mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      );
+      context.go(AppRoutes.home);
     } else if (mounted) {
       // Show error from provider
       setState(() {

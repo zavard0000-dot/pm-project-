@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
-import 'package:teamup/features/settings/settings.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teamup/models/models.dart';
+import 'package:teamup/router.dart';
 import 'package:teamup/theme.dart';
 import 'stat_card.dart';
 
@@ -54,9 +54,7 @@ class ProfileHeader extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.white),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => EditProfileScreen()),
-                      );
+                      context.go(AppRoutes.editProfile);
                     },
                   ),
                   const Text('My Profile', style: AppTextStyles.appBarTitle),
@@ -66,9 +64,7 @@ class ProfileHeader extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => SettingsScreen()),
-                      );
+                      context.go(AppRoutes.settings);
                     },
                   ),
                 ],

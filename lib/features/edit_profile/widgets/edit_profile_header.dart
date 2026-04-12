@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teamup/theme.dart';
 
 class EditProfileHeader extends StatelessWidget {
@@ -45,7 +46,7 @@ class EditProfileHeader extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     icon: Icon(Icons.arrow_back),
                     color: Colors.white,

@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MyAuthProvider>(
       builder: (context, authProvider, _) {
-        final user = authProvider.currentUser;
+        final user = authProvider.user;
 
         if (user == null) {
           return Scaffold(

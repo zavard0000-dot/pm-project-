@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:teamup/models/models.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/primary_button.dart';
 import 'package:teamup/widgets/round_icon_btn.dart';
 import '../widgets/widgets.dart';
 
 class AnnouncementDetailsScreen extends StatelessWidget {
-  const AnnouncementDetailsScreen({super.key});
+  final String announcementId;
+  final Announcement? announcement;
+
+  const AnnouncementDetailsScreen({
+    super.key,
+    required this.announcementId,
+    this.announcement,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                       //btn back
                       roundIconBtn(
                         icon: Icons.arrow_back,
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => context.pop(),
                       ),
                       const SizedBox(height: 18),
                       const Text(

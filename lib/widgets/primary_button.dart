@@ -7,14 +7,16 @@ class PrimaryButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.icon,
+    this.isLoading = false,
   });
   final String text;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final isEnabled = onPressed != null;
+    final isEnabled = onPressed != null && !isLoading;
 
     return Container(
       width: double.infinity,
@@ -49,7 +51,17 @@ class PrimaryButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[
+              if (isLoading) ...[
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ] else if (icon != null) ...[
                 Icon(
                   icon,
                   color: isEnabled ? Colors.white : Colors.white60,
@@ -58,7 +70,7 @@ class PrimaryButton extends StatelessWidget {
                 const SizedBox(width: 8),
               ],
               Text(
-                text,
+                isLoading ? "Saving..." : text,
                 style: AppTextStyles.button.copyWith(
                   color: isEnabled ? Colors.white : Colors.white60,
                 ),

@@ -75,7 +75,7 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
 
     try {
       final authProvider = context.read<MyAuthProvider>();
-      final currentUser = authProvider.currentUser;
+      final currentUser = authProvider.user;
 
       if (currentUser == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -292,14 +292,13 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
                 const SizedBox(height: 16),
 
                 // Create Button
-                Material(
-                  child: PrimaryButton(
-                    text: _isLoading ? "Creating..." : "Create announcement",
-                    icon: Icons.star_border,
-                    onPressed: (_isFormValid() && !_isLoading)
-                        ? _createAnnouncement
-                        : null,
-                  ),
+                PrimaryButton(
+                  text: "Create announcement",
+                  icon: Icons.star_border,
+                  isLoading: _isLoading,
+                  onPressed: (_isFormValid() && !_isLoading)
+                      ? _createAnnouncement
+                      : null,
                 ),
 
                 const SizedBox(height: 70),

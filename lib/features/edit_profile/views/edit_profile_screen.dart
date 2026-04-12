@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:teamup/constances.dart';
 import 'package:teamup/features/edit_profile/widgets/availability_card.dart';
@@ -29,6 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String selectedCourse = '1';
   String selectedAvailability = 'available';
   Set<String> selectedSkills = {};
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -37,7 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _initializeControllers() {
-    final user = context.read<MyAuthProvider>().currentUser;
+    final user = context.read<MyAuthProvider>().user;
 
     fullNameController = TextEditingController(text: user?.fullName ?? '');
     nicknameController = TextEditingController(text: user?.username ?? '');
@@ -73,7 +75,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     final authProvider = context.read<MyAuthProvider>();
-    final user = authProvider.currentUser;
+    final user = authProvider.user;
 
     if (user == null) {
       ScaffoldMessenger.of(
@@ -82,33 +84,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    final success = await authProvider.updateUserProfile(
-      fullName: fullNameController.text.trim(),
-      university: selectedUniversity,
-      currentCourse: int.parse(selectedCourse),
-      professionName: specializationController.text.trim(),
-      email: emailController.text.trim(),
-      github: githubController.text.trim(),
-      linkedin: linkedinController.text.trim(),
-      location: cityController.text.trim(),
-      telegram: telegramController.text.trim(),
-      aboutMySelf: aboutController.text.trim(),
-      hardSkills: selectedSkills.toList(),
-      availability: selectedAvailability,
-    );
+    setState(() => _isSaving = true);
 
-    if (mounted) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
-        );
-        Navigator.of(context).pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authProvider.error ?? 'Error updating profile'),
-          ),
-        );
+    try {
+      final success = await authProvider.updateUserProfile(
+        fullName: fullNameController.text.trim(),
+        university: selectedUniversity,
+        currentCourse: int.parse(selectedCourse),
+        professionName: specializationController.text.trim(),
+        email: emailController.text.trim(),
+        github: githubController.text.trim(),
+        linkedin: linkedinController.text.trim(),
+        location: cityController.text.trim(),
+        telegram: telegramController.text.trim(),
+        aboutMySelf: aboutController.text.trim(),
+        hardSkills: selectedSkills.toList(),
+        availability: selectedAvailability,
+      );
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Profile updated successfully')),
+          );
+          context.pop();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(authProvider.error ?? 'Error updating profile'),
+            ),
+          );
+          setState(() => _isSaving = false);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        setState(() => _isSaving = false);
       }
     }
   }
@@ -330,15 +344,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 24),
 
                 // Save button
-                Consumer<MyAuthProvider>(
-                  builder: (context, authProvider, _) {
-                    return PrimaryButton(
-                      text: authProvider.isLoading
-                          ? "Saving..."
-                          : "Save the changes",
-                      onPressed: authProvider.isLoading ? null : _saveProfile,
-                    );
-                  },
+                PrimaryButton(
+                  text: "Save the changes",
+                  isLoading: _isSaving,
+                  onPressed: _isSaving ? null : _saveProfile,
                 ),
                 SizedBox(height: 80),
               ],

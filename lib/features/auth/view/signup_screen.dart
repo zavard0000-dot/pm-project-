@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:teamup/router.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
@@ -199,7 +201,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.go(AppRoutes.login);
             },
             icon: const Icon(Icons.abc),
             color: Colors.white,
@@ -258,10 +260,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (success && mounted) {
       print('[SignupScreen] Registration successful, navigating to MainScreen');
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      );
+      context.go(AppRoutes.home);
     } else if (mounted) {
       // Show Firebase error
       final errorMessage = authProvider.error ?? "Sign up failed";
