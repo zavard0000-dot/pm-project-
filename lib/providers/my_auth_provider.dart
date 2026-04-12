@@ -14,6 +14,18 @@ class MyAuthProvider extends ChangeNotifier {
   String? _error;
   StreamSubscription<MyUser?>? _streamSubscription;
 
+  // Список объявлений для feed
+  List<Announcement> _announcements = [];
+  bool _isLoadingAnnouncements = false;
+
+  // Избранные объявления
+  List<String> _favoriteAnnouncementIds = [];
+
+  // Фильтры для объявлений
+  List<String> selectedTypes = ['person', 'team', 'project'];
+  List<String> selectedSkills = [];
+  List<String> selectedEventTypes = [];
+
   MyAuthProvider({required AuthService authService})
     : _authService = authService {
     // Подписываемся на стрим один раз при инициализации
@@ -24,8 +36,11 @@ class MyAuthProvider extends ChangeNotifier {
         // 2. Логика смены статуса
         if (user != null) {
           _status = AuthStatus.authenticated;
+          // Загружаем избранные объявления при входе пользователя
+          _loadFavorites(user.uid);
         } else {
           _status = AuthStatus.unauthenticated;
+          _favoriteAnnouncementIds = [];
         }
 
         _error = null;
@@ -38,6 +53,21 @@ class MyAuthProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
+
+    // Загружаем объявления при инициализации
+    loadAnnouncements();
+  }
+
+  // Загрузить избранные объявления из Firestore
+  Future<void> _loadFavorites(String userId) async {
+    try {
+      _favoriteAnnouncementIds = await _authService.getFavorites(
+        userId: userId,
+      );
+      notifyListeners();
+    } catch (e) {
+      print('[MyAuthProvider] Error loading favorites: $e');
+    }
   }
 
   @override
@@ -51,14 +81,96 @@ class MyAuthProvider extends ChangeNotifier {
   MyUser? get user => _user;
   String? get error => _error;
 
+  // Геттеры для объявлений
+  List<Announcement> get announcements => _announcements;
+  bool get isLoadingAnnouncements => _isLoadingAnnouncements;
+  bool get hasAnnouncements => _announcements.isNotEmpty;
+
   // Удобные хелперы, чтобы не писать проверки через Enum в UI
   bool get isLoading => _status == AuthStatus.loading;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
+
+  // Проверить, находится ли объявление в избранном
+  bool isFavorite(String announcementId) =>
+      _favoriteAnnouncementIds.contains(announcementId);
 
   // Clear error
   void clearError() {
     _error = null;
     notifyListeners();
+  }
+
+  // Загрузить объявления с фильтрацией
+  Future<void> loadAnnouncements({
+    List<String>? types,
+    List<String>? skills,
+    List<String>? eventTypes,
+  }) async {
+    try {
+      _isLoadingAnnouncements = true;
+      notifyListeners();
+
+      _announcements = await _authService.getAnnouncements(
+        types: types ?? selectedTypes,
+        skills: skills ?? selectedSkills,
+        eventTypes: eventTypes ?? selectedEventTypes,
+        limit: 30,
+      );
+
+      // Сохраняем фильтры если они переданы
+      if (types != null) selectedTypes = types;
+      if (skills != null) selectedSkills = skills;
+      if (eventTypes != null) selectedEventTypes = eventTypes;
+
+      _isLoadingAnnouncements = false;
+      notifyListeners();
+
+      print('[MyAuthProvider] Loaded ${_announcements.length} announcements');
+    } catch (e) {
+      print('[MyAuthProvider] Error loading announcements: $e');
+      _isLoadingAnnouncements = false;
+      notifyListeners();
+    }
+  }
+
+  // Обновить фильтры и перезагрузить объявления
+  Future<void> applyFilters({
+    required List<String> types,
+    required List<String> skills,
+    required List<String> eventTypes,
+  }) async {
+    await loadAnnouncements(
+      types: types,
+      skills: skills,
+      eventTypes: eventTypes,
+    );
+  }
+
+  // Переключить избранное объявление
+  Future<void> toggleFavorite(String announcementId) async {
+    try {
+      if (_favoriteAnnouncementIds.contains(announcementId)) {
+        _favoriteAnnouncementIds.remove(announcementId);
+        print('[MyAuthProvider] Removed from favorites: $announcementId');
+      } else {
+        _favoriteAnnouncementIds.add(announcementId);
+        print('[MyAuthProvider] Added to favorites: $announcementId');
+      }
+
+      notifyListeners();
+
+      // Сохраняем в Firestore
+      final firebaseUser = _authService.getCurrentUser;
+      if (firebaseUser != null) {
+        await _authService.saveFavorites(
+          userId: firebaseUser.uid,
+          favoriteIds: _favoriteAnnouncementIds,
+        );
+      }
+    } catch (e) {
+      print('[MyAuthProvider] Error toggling favorite: $e');
+      rethrow;
+    }
   }
 
   // Sign In

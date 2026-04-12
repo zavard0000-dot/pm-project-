@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Announcement {
   final String? id;
   final String type; // 'project', 'team', 'person'
@@ -76,24 +78,28 @@ class Announcement {
       eventType: json['eventType'] ?? '',
       requiredSkills: List<String>.from(json['requiredSkills'] ?? []),
       telegramLink: json['telegramLink'],
-      eventDateStart: json['eventDateStart'] != null
-          ? DateTime.parse(json['eventDateStart'])
-          : null,
-      eventDateEnd: json['eventDateEnd'] != null
-          ? DateTime.parse(json['eventDateEnd'])
-          : null,
+      eventDateStart: _parseDateTime(json['eventDateStart']),
+      eventDateEnd: _parseDateTime(json['eventDateEnd']),
       eventLocation: json['eventLocation'],
       requiredTeamSize: json['requiredTeamSize'],
       userId: json['userId'],
       userName: json['userName'],
       userCourse: json['userCourse'],
       userUniversity: json['userUniversity'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : null,
+      createdAt: _parseDateTime(json['createdAt']),
+      updatedAt: _parseDateTime(json['updatedAt']),
     );
+  }
+
+  // Helper method to parse DateTime from Firestore (handles both Timestamp and String)
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+    if (value is String) {
+      return DateTime.parse(value);
+    }
+    return null;
   }
 }

@@ -5,6 +5,26 @@ const UNIVERSITIES_DROP_DOWN_MENU_ENTRIES = [
   DropdownMenuEntry(value: 'sdu', label: 'SDU University'),
   DropdownMenuEntry(value: 'kbtu', label: 'KBTU'),
   DropdownMenuEntry(value: "kaznu", label: "Al-Farabi KazNU"),
+  DropdownMenuEntry(value: 'satbayev', label: 'Satbayev University'),
+  DropdownMenuEntry(value: 'iitu', label: 'IITU'),
+  DropdownMenuEntry(
+    value: 'eurasian',
+    label: 'Gumilyov Eurasian National University',
+  ),
+  DropdownMenuEntry(
+    value: 'karaganda',
+    label: 'Karaganda Technical University',
+  ),
+  DropdownMenuEntry(value: 'aktobe', label: 'Aktobe Regional University'),
+  DropdownMenuEntry(
+    value: 'east_kazakhstan',
+    label: 'East Kazakhstan University',
+  ),
+  DropdownMenuEntry(
+    value: 'asfendiyarov',
+    label: 'Asfendiyarov Kazakh National Medical University',
+  ),
+  DropdownMenuEntry(value: 'kostanay', label: 'Kostanay Regional University'),
 ];
 
 const EVENTS_DROP_DOWN_MENU_ENTRIES = [
@@ -12,6 +32,17 @@ const EVENTS_DROP_DOWN_MENU_ENTRIES = [
   DropdownMenuEntry(value: 'mvp', label: 'MVP Project'),
   DropdownMenuEntry(value: 'final', label: 'FINAL project'),
   DropdownMenuEntry(value: "game jam", label: "Game Jam"),
+  DropdownMenuEntry(value: "startup", label: "Startup"),
+];
+
+// Event types for filtering in feed
+const EVENT_TYPES = [
+  {'title': 'hackathon', 'emoji': '🏆'},
+  {'title': 'mvp', 'emoji': '🏆'},
+  {'title': 'practice', 'emoji': '📚'},
+  {'title': 'final', 'emoji': '🏆'},
+  {'title': 'startup', 'emoji': '🚀'},
+  {'title': 'game jam', 'emoji': '🚀'},
 ];
 
 const COURSES_DROP_DOWN_MENU_ENTRIES = [

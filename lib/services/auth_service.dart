@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:teamup/interfaces/interfaces.dart';
 import 'package:teamup/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -278,6 +279,52 @@ class AuthService implements AuthInterface {
     required String newPassword,
   }) async {}
 
+  // Сохранить/обновить избранные объявления пользователя
+  Future<void> saveFavorites({
+    required String userId,
+    required List<String> favoriteIds,
+  }) async {
+    try {
+      print(
+        '[AuthService] Saving ${favoriteIds.length} favorites for userId: $userId',
+      );
+
+      await firestore.collection('users').doc(userId).update({
+        'favoriteAnnouncements': favoriteIds,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      print('[AuthService] Favorites saved successfully');
+    } on FirebaseException catch (e) {
+      print(
+        '[AuthService] Firebase error in saveFavorites - Code: ${e.code}, Message: ${e.message}',
+      );
+      rethrow;
+    } catch (e) {
+      print('[AuthService] Error in saveFavorites: $e');
+      rethrow;
+    }
+  }
+
+  // Получить избранные объявления пользователя
+  Future<List<String>> getFavorites({required String userId}) async {
+    try {
+      final userDoc = await firestore.collection('users').doc(userId).get();
+      final data = userDoc.data();
+
+      if (data == null) return [];
+
+      final favorites = List<String>.from(data['favoriteAnnouncements'] ?? []);
+      print(
+        '[AuthService] Loaded ${favorites.length} favorites for userId: $userId',
+      );
+      return favorites;
+    } catch (e) {
+      print('[AuthService] Error in getFavorites: $e');
+      return [];
+    }
+  }
+
   Future<String> saveAnnouncement({required Announcement announcement}) async {
     try {
       print('[AuthService] Attempting to save announcement');
@@ -324,5 +371,95 @@ class AuthService implements AuthInterface {
       length,
       (index) => chars[random.nextInt(chars.length)],
     ).join();
+  }
+
+  // Получить список объявлений с фильтрацией
+  Future<List<Announcement>> getAnnouncements({
+    List<String> types = const [],
+    List<String> skills = const [],
+    List<String> eventTypes = const [],
+    int limit = 30,
+  }) async {
+    try {
+      print('[AuthService] Fetching announcements');
+      Talker().debug(types.toString());
+      print(
+        '[AuthService] Filters - Types: $types, Skills: $skills, Events: $eventTypes',
+      );
+
+      // Если типы пусты - не показываем ничего
+      if (types.isEmpty) {
+        print('[AuthService] Types is empty, returning empty list');
+        return [];
+      }
+
+      Query<Map<String, dynamic>> query = firestore.collection('announcements');
+
+      // ⚠️ ВАЖНО: НЕ применяем where('type') потому что в комбинации с orderBy('createdAt')
+      // требуется составной индекс. Вместо этого фильтруем на клиенте.
+      // This avoids requiring a composite index for where('type') + orderBy('createdAt')
+
+      // Фильтр по skills - не применяем для оптимизации (требует индекса)
+      // if (skills.isNotEmpty) {
+      //   query = query.where('requiredSkills', arrayContainsAny: skills);
+      // }
+
+      // Фильтр по типу события - не применяем для оптимизации (требует индекса)
+      // if (eventTypes.isNotEmpty) {
+      //   query = query.where('eventType', whereIn: eventTypes);
+      // }
+
+      // Сортируем по новым (самые свежие первыми) - БЕЗ where фильтров
+      query = query.orderBy('createdAt', descending: true);
+
+      // Лимит 30 объявлений
+      query = query.limit(limit);
+
+      final snapshot = await query.get();
+
+      Talker().debug(
+        '[AuthService] Firestore returned ${snapshot.docs.length} documents',
+      );
+
+      var announcements = snapshot.docs.map((doc) {
+        return Announcement.fromJson(doc.data(), doc.id);
+      }).toList();
+
+      // Фильтрация на клиенте по типам (person, project, team)
+      // Применяем фильтр только если выбраны не все 3 типа
+      if (types.isNotEmpty && types.length < 3) {
+        print('[AuthService] Filtering by types on client: $types');
+        announcements = announcements
+            .where((a) => types.contains(a.type))
+            .toList();
+      }
+
+      // Фильтрация на клиенте для skills и eventTypes
+      if (skills.isNotEmpty) {
+        print('[AuthService] Filtering by skills on client: $skills');
+        announcements = announcements
+            .where(
+              (a) => a.requiredSkills.any((skill) => skills.contains(skill)),
+            )
+            .toList();
+      }
+
+      if (eventTypes.isNotEmpty) {
+        print('[AuthService] Filtering by eventTypes on client: $eventTypes');
+        announcements = announcements
+            .where(
+              (a) => a.eventType != null && eventTypes.contains(a.eventType),
+            )
+            .toList();
+      }
+
+      print(
+        '[AuthService] Successfully fetched ${announcements.length} announcements',
+      );
+      return announcements;
+    } catch (e) {
+      print('[AuthService] Error fetching announcements: $e');
+      return [];
+    }
   }
 }

@@ -6,20 +6,28 @@ import 'package:teamup/widgets/widgets.dart';
 import 'telegram_btn.dart';
 
 class PostCard extends StatelessWidget {
+  final String? id;
   final String name;
   final String university;
   final String title;
   final String description;
   final List<String> tags;
+  final String? telegramLink;
+  final bool isFavorite;
+  final Future<void> Function()? onFavoriteToggle;
   final bool isAvatarText;
 
   const PostCard({
     Key? key,
+    this.id,
     required this.name,
     required this.university,
     required this.title,
     required this.description,
     required this.tags,
+    this.telegramLink,
+    this.isFavorite = false,
+    this.onFavoriteToggle,
     this.isAvatarText = false,
   }) : super(key: key);
 
@@ -29,7 +37,7 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.go('/home/announcement/1');
+        context.go('/home/announcement/${id ?? "1"}');
       },
       child: BaseCard(
         margin: EdgeInsets.all(16).copyWith(top: 0),
@@ -75,7 +83,22 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.star, color: Colors.amber),
+                GestureDetector(
+                  onTap: onFavoriteToggle != null
+                      ? () async {
+                          try {
+                            await onFavoriteToggle!();
+                          } catch (e) {
+                            print('Error toggling favorite: $e');
+                          }
+                        }
+                      : null,
+                  child: Icon(
+                    isFavorite ? Icons.star : Icons.star_outline,
+                    color: isFavorite ? Colors.amber : Colors.grey,
+                    size: 24,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -128,9 +151,7 @@ class PostCard extends StatelessWidget {
                   .toList(),
             ),
             const SizedBox(height: 16),
-            TelegramBtn(),
-            // SizedBox(height: 16),
-            // PrimaryButton(text: "ASD", onPressed: () {}),
+            TelegramBtn(telegramLink: telegramLink),
           ],
         ),
       ),
