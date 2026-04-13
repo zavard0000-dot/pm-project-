@@ -1,35 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:teamup/router.dart';
+import 'package:teamup/models/announcement.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
-import 'telegram_btn.dart';
+import '../../../../../widgets/telegram_btn.dart';
 
 class PostCard extends StatelessWidget {
-  final String? id;
-  final String name;
-  final String university;
-  final String title;
-  final String description;
-  final List<String> tags;
-  final String? telegramLink;
+  final Announcement announcement;
   final bool isFavorite;
   final Future<void> Function()? onFavoriteToggle;
   final bool isAvatarText;
 
   const PostCard({
     Key? key,
-    this.id,
-    required this.name,
-    required this.university,
-    required this.title,
-    required this.description,
-    required this.tags,
-    this.telegramLink,
+    required this.announcement,
     this.isFavorite = false,
     this.onFavoriteToggle,
     this.isAvatarText = false,
   }) : super(key: key);
+
+  String _getTypeLabel(String type) {
+    switch (type) {
+      case 'project':
+        return '📌 Проект';
+      case 'team':
+        return '👥 Команда';
+      case 'person':
+        return '👤 Персона';
+      default:
+        return '';
+    }
+  }
+
+  String _formatDeadline(DateTime? date) {
+    if (date == null) return '';
+    final now = DateTime.now();
+    final difference = date.difference(now);
+
+    if (difference.isNegative) {
+      return 'Истёк';
+    } else if (difference.inDays > 30) {
+      return '📅 ${date.day}.${date.month}.${date.year}';
+    } else if (difference.inDays > 0) {
+      return '⏱ ${difference.inDays} дней';
+    } else if (difference.inHours > 0) {
+      return '⏰ ${difference.inHours}ч';
+    } else {
+      return '🔴 Сегодня';
+    }
+  }
+
+  bool _isDeadlineSoon(DateTime? date) {
+    if (date == null) return false;
+    final now = DateTime.now();
+    final difference = date.difference(now);
+    return difference.inDays <= 7;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +63,7 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.go('/home/announcement/${id ?? "1"}');
+        context.go('/home/announcement/${announcement.id ?? "1"}');
       },
       child: BaseCard(
         margin: EdgeInsets.all(16).copyWith(top: 0),
@@ -58,7 +84,7 @@ class PostCard extends StatelessWidget {
                       : null,
                   child: isAvatarText
                       ? Text(
-                          name[0],
+                          (announcement.userName ?? 'A')[0],
                           style: const TextStyle(color: Colors.white),
                         )
                       : null,
@@ -69,13 +95,13 @@ class PostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        announcement.userName ?? 'Unknown',
                         style: isDarkMode
                             ? AppTextStyles.darkBodyLarge
                             : AppTextStyles.subtitle,
                       ),
                       Text(
-                        university,
+                        announcement.userUniversity ?? announcement.university,
                         style: isDarkMode
                             ? AppTextStyles.darkCaptionMedium
                             : AppTextStyles.captionMedium,
@@ -108,7 +134,7 @@ class PostCard extends StatelessWidget {
                 const Text('⚡ ', style: TextStyle(fontSize: 18)),
                 Expanded(
                   child: Text(
-                    title,
+                    announcement.title,
                     style: isDarkMode
                         ? AppTextStyles.darkHeadingSmall
                         : AppTextStyles.headingSmall,
@@ -118,16 +144,127 @@ class PostCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              description,
+              announcement.description,
               style: isDarkMode
                   ? AppTextStyles.darkBodyMedium
                   : AppTextStyles.captionLarge,
             ),
             const SizedBox(height: 12),
+            // Info badges - Type, Event Type, Deadline
+            if (announcement.type.isNotEmpty ||
+                announcement.eventType.isNotEmpty ||
+                announcement.eventDateEnd != null)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  // Announcement Type Badge
+                  if (announcement.type.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryPurple.withValues(
+                          alpha: isDarkMode ? 0.25 : 0.12,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primaryPurple.withValues(
+                            alpha: isDarkMode ? 0.4 : 0.2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        _getTypeLabel(announcement.type),
+                        style:
+                            (isDarkMode
+                                    ? AppTextStyles.darkBodyMedium
+                                    : AppTextStyles.bodySmall)
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDarkMode
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.primaryPurple,
+                                ),
+                      ),
+                    ),
+                  // Event Type Badge
+                  if (announcement.eventType.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBlue.withValues(
+                          alpha: isDarkMode ? 0.25 : 0.12,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primaryBlue.withValues(
+                            alpha: isDarkMode ? 0.4 : 0.2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        '🎯 ${announcement.eventType}',
+                        style:
+                            (isDarkMode
+                                    ? AppTextStyles.darkBodyMedium
+                                    : AppTextStyles.bodySmall)
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDarkMode
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.primaryBlue,
+                                ),
+                      ),
+                    ),
+                  // Deadline Badge
+                  if (announcement.eventDateEnd != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _isDeadlineSoon(announcement.eventDateEnd)
+                            ? AppColors.accentPink.withValues(
+                                alpha: isDarkMode ? 0.25 : 0.12,
+                              )
+                            : AppColors.accentPink.withValues(
+                                alpha: isDarkMode ? 0.15 : 0.08,
+                              ),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.accentPink.withValues(
+                            alpha: isDarkMode ? 0.4 : 0.2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        _formatDeadline(announcement.eventDateEnd),
+                        style:
+                            (isDarkMode
+                                    ? AppTextStyles.darkBodyMedium
+                                    : AppTextStyles.bodySmall)
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDarkMode
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.accentPink,
+                                ),
+                      ),
+                    ),
+                ],
+              ),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: tags
+              children: announcement.requiredSkills
                   .map(
                     (tag) => Container(
                       padding: const EdgeInsets.symmetric(
@@ -151,7 +288,7 @@ class PostCard extends StatelessWidget {
                   .toList(),
             ),
             const SizedBox(height: 16),
-            TelegramBtn(telegramLink: telegramLink),
+            TelegramBtn(telegramLink: announcement.telegramLink),
           ],
         ),
       ),

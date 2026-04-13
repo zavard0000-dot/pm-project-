@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamup/theme.dart';
-import 'package:teamup/widgets/bases/base_card.dart';
+import 'package:teamup/widgets/base_card.dart';
 
 class SettingSection extends StatelessWidget {
   final String title;
