@@ -63,7 +63,10 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.go('/home/announcement/${announcement.id ?? "1"}');
+        context.go(
+          '/home/announcement/${announcement.id ?? "1"}',
+          extra: announcement,
+        );
       },
       child: BaseCard(
         margin: EdgeInsets.all(16).copyWith(top: 0),

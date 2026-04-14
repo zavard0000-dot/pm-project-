@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/theme.dart';
-import 'package:teamup/widgets/primary_button.dart';
+import 'package:teamup/widgets/telegram_btn.dart';
 import 'package:teamup/widgets/round_icon_btn.dart';
 import '../widgets/widgets.dart';
 
@@ -18,6 +18,10 @@ class AnnouncementDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (announcement == null) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode
         ? AppColors.darkBackground
@@ -31,11 +35,10 @@ class AnnouncementDetailsScreen extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: CustomScrollView(
         slivers: [
-          // Header
+          // Header with title and description
           SliverToBoxAdapter(
             child: Container(
               width: double.infinity,
-              // градиент
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: gradientColors,
@@ -44,27 +47,29 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                 ),
               ),
               child: SafeArea(
-                //Убирает отступ снизу
                 bottom: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //btn back
                       roundIconBtn(
                         icon: Icons.arrow_back,
                         onPressed: () => context.pop(),
                       ),
                       const SizedBox(height: 18),
-                      const Text(
-                        'Ищу Frontend (React) для хакатона',
-                        style: AppTextStyles.whiteHeadingLarge,
+                      Text(
+                        announcement!.title,
+                        style: AppTextStyles.whiteHeadingLarge.copyWith(
+                          height: 1.3,
+                        ),
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Хакатон "Digital Almaty" через 2 недели. Нужен человек, который быстро соберет MVP на готовом дизайне.',
-                        style: AppTextStyles.whiteCaption,
+                      Text(
+                        announcement!.description,
+                        style: AppTextStyles.whiteCaption.copyWith(height: 1.4),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -73,9 +78,8 @@ class AnnouncementDetailsScreen extends StatelessWidget {
             ),
           ),
 
-          //details
+          // Details cards
           SliverToBoxAdapter(
-            //Виджет смещает своего ребенка
             child: Transform.translate(
               offset: const Offset(0, -8),
               child: Container(
@@ -86,23 +90,19 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
                 child: Column(
                   children: [
-                    SizedBox(height: 16),
-                    AuthorCard(),
-                    SizedBox(height: 14),
-                    EventDetailsCard(),
-                    SizedBox(height: 14),
-                    DescriptionCard(),
-                    SizedBox(height: 14),
-                    SkillsRequiredCard(
-                      skills: ['React', 'TypeScript', 'UX Design', 'Figma'],
-                    ),
-                    SizedBox(height: 24),
-                    PrimaryButton(
-                      icon: Icons.telegram,
-                      text: "Связаться с Telegram",
-                      onPressed: () {},
-                    ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 16),
+                    AuthorCard(announcement: announcement!),
+                    const SizedBox(height: 14),
+                    EventDetailsCard(announcement: announcement!),
+                    const SizedBox(height: 14),
+                    DescriptionCard(announcement: announcement!),
+                    if (announcement!.requiredSkills.isNotEmpty) ...[
+                      const SizedBox(height: 14),
+                      SkillsRequiredCard(skills: announcement!.requiredSkills),
+                    ],
+                    const SizedBox(height: 24),
+                    TelegramBtn(telegramLink: announcement!.telegramLink),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),

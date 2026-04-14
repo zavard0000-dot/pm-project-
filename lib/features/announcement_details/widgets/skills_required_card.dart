@@ -11,13 +11,17 @@ class SkillsRequiredCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    if (skills.isEmpty) {
+      return SizedBox.shrink();
+    }
+
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '💼 Skills and technologies',
-            style: AppTextStyles.headingSmall.copyWith(
+            '💼 Требуемые навыки и технологии',
+            style: AppTextStyles.headingMedium.copyWith(
               color: isDarkMode
                   ? AppColors.darkTextPrimary
                   : AppColors.textPrimary,
@@ -50,7 +54,7 @@ class SkillsRequiredCard extends StatelessWidget {
                       style: AppTextStyles.tag.copyWith(
                         color: isDarkMode
                             ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary,
+                            : AppColors.primaryBlue,
                       ),
                     ),
                   ),
