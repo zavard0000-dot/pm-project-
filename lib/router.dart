@@ -6,6 +6,7 @@ import 'package:teamup/features/auth/view/signup_screen.dart';
 import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
 import 'package:teamup/features/home/view/home_screen.dart';
 import 'package:teamup/features/onboarding/view/onboarding_screen.dart';
+import 'package:teamup/features/profile/profile.dart';
 import 'package:teamup/features/settings/settings.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String settings = '/home/settings';
   static const String editProfile = '/home/edit-profile';
   static const String announcementDetails = '/home/announcement/:id';
+  static const String userProfile = '/user-profile';
 }
 
 GoRouter createAppRouter(MyAuthProvider authProvider) {
@@ -139,6 +141,17 @@ GoRouter createAppRouter(MyAuthProvider authProvider) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: AppRoutes.userProfile,
+        name: 'userProfile',
+        builder: (context, state) {
+          final user = state.extra as MyUser?;
+          if (user == null) {
+            return Scaffold(body: Center(child: const Text('User not found')));
+          }
+          return UserProfileScreen(user: user);
+        },
       ),
     ],
   );
