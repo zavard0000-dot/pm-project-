@@ -4,6 +4,7 @@ import 'package:teamup/models/models.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/telegram_btn.dart';
 import 'package:teamup/widgets/round_icon_btn.dart';
+import 'package:teamup/features/home/tabs/profile_tab/profile_tab.dart';
 import '../widgets/widgets.dart';
 
 class AnnouncementDetailsScreen extends StatelessWidget {
@@ -15,6 +16,28 @@ class AnnouncementDetailsScreen extends StatelessWidget {
     required this.announcementId,
     this.announcement,
   });
+
+  void _showAuthorProfile(BuildContext context) {
+    if (announcement == null ||
+        announcement!.userId == null ||
+        announcement!.userName == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Author information not available')),
+      );
+      return;
+    }
+
+    // Show ProfileScreen as a modal
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ProfileScreen(
+        isCurrentUser: false,
+        userTelegramLink: announcement!.telegramLink,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +114,10 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
-                    AuthorCard(announcement: announcement!),
+                    AuthorCard(
+                      announcement: announcement!,
+                      onTap: () => _showAuthorProfile(context),
+                    ),
                     const SizedBox(height: 14),
                     EventDetailsCard(announcement: announcement!),
                     const SizedBox(height: 14),

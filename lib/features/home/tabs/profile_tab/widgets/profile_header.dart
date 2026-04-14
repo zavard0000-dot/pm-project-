@@ -6,31 +6,34 @@ import 'package:teamup/theme.dart';
 import 'stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.user});
+  const ProfileHeader({
+    super.key,
+    required this.user,
+    this.isCurrentUser = true,
+    this.onAuthorTap,
+  });
+
   final MyUser user;
+  final bool isCurrentUser;
+  final VoidCallback? onAuthorTap;
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
-      //clipBehavior - обрезает элементы за границей
       clipBehavior: Clip.none,
-      //базовое положение детей, кроме positioned
       alignment: Alignment.bottomCenter,
       children: [
-        // Градиентный фон
+        // Gradient background
         Container(
           width: double.infinity,
-          // Динамическая высота за счет padding
           padding: const EdgeInsets.only(
-            top: 60, // Отступ для SafeArea (статус-бара)
-            bottom:
-                100, // ВАЖНО: Освобождаем место снизу для наезжающих карточек
+            top: 60,
+            bottom: 100,
             left: 24,
             right: 24,
           ),
-
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: (isDarkMode
@@ -45,31 +48,44 @@ class ProfileHeader extends StatelessWidget {
             ),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
           ),
-
           child: Column(
             children: [
+              // Top buttons row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      context.go(AppRoutes.editProfile);
-                    },
+                  if (isCurrentUser)
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white),
+                      onPressed: () {
+                        context.go(AppRoutes.editProfile);
+                      },
+                    )
+                  else
+                    const SizedBox(width: 48),
+                  Text(
+                    isCurrentUser ? 'My Profile' : 'Profile',
+                    style: AppTextStyles.appBarTitle,
                   ),
-                  const Text('My Profile', style: AppTextStyles.appBarTitle),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: Colors.white,
+                  if (isCurrentUser)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        context.go(AppRoutes.settings);
+                      },
+                    )
+                  else
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
-                    onPressed: () {
-                      context.go(AppRoutes.settings);
-                    },
-                  ),
                 ],
               ),
               const SizedBox(height: 16),
+              // Avatar
               CircleAvatar(
                 radius: 45,
                 backgroundColor: Colors.white,
@@ -94,105 +110,48 @@ class ProfileHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              if (user.location.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      _getAvailabilityIcon(user.availability),
-                      color: _getAvailabilityColor(user.availability),
-                      size: 16,
-                    ),
+                    Icon(Icons.location_on, color: Colors.white70, size: 16),
                     SizedBox(width: 4),
-                    Text(
-                      _getAvailabilityLabel(user.availability),
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: _getAvailabilityColor(user.availability),
-                      ),
-                    ),
+                    Text(user.location, style: AppTextStyles.whiteCaption),
                   ],
                 ),
-              ),
             ],
           ),
         ),
-
-        // Карточки статистики, наезжающие на фон
+        // Stats cards
         Positioned(
           bottom: -40,
+          left: 24,
+          right: 24,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               StatCard(
-                icon: Icons.track_changes,
+                icon: Icons.folder_outlined,
                 value: user.projectsCount.toString(),
                 label: 'Projects',
-                iconColor: Color(0xFF2563EB),
+                iconColor: AppColors.primaryBlue,
               ),
               StatCard(
                 icon: Icons.people_outline,
                 value: user.connectionsCount.toString(),
                 label: 'Connections',
-                iconColor: Color(0xFF7C3AED),
+                iconColor: AppColors.primaryPurple,
               ),
               StatCard(
-                icon: Icons.emoji_events_outlined,
+                icon: Icons.star_outline,
                 value: user.achievementsCount.toString(),
                 label: 'Achievements',
-                iconColor: Color(0xFFDB2777),
+                iconColor: Colors.amber,
               ),
             ],
           ),
         ),
       ],
     );
-  }
-
-  String _getAvailabilityLabel(String status) {
-    switch (status.toLowerCase()) {
-      case 'available':
-        return 'Available for projects';
-      case 'busy':
-        return 'Busy at the moment';
-      case 'unavailable':
-        return 'Not available';
-      default:
-        return 'Available for projects';
-    }
-  }
-
-  Color _getAvailabilityColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'available':
-        return Color(0xFF7C3AED);
-      case 'busy':
-        return Colors.orange;
-      case 'unavailable':
-        return Colors.red;
-      default:
-        return Color(0xFF7C3AED);
-    }
-  }
-
-  IconData _getAvailabilityIcon(String status) {
-    switch (status.toLowerCase()) {
-      case 'available':
-        return Icons.check_circle_outline;
-      case 'busy':
-        return Icons.schedule;
-      case 'unavailable':
-        return Icons.cancel;
-      default:
-        return Icons.check_circle_outline;
-    }
   }
 }

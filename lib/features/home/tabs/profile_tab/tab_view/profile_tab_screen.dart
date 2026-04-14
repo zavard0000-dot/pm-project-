@@ -3,9 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:teamup/features/home/tabs/profile_tab/widgets/widgets.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
+import 'package:teamup/widgets/telegram_btn.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final bool isCurrentUser;
+  final String? userTelegramLink;
+
+  const ProfileScreen({
+    super.key,
+    this.isCurrentUser = true,
+    this.userTelegramLink,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +33,8 @@ class ProfileScreen extends StatelessWidget {
           body: ListView(
             padding: EdgeInsets.zero,
             children: [
-              // Profile Header
-              ProfileHeader(user: user),
+              // Profile Header - Universal for both current user and other users
+              ProfileHeader(user: user, isCurrentUser: isCurrentUser),
 
               const SizedBox(height: 60),
 
@@ -36,8 +44,9 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // About Myself Section
-                    AboutMyselfCard(content: user.aboutMySelf),
-                    const SizedBox(height: 16),
+                    if (user.aboutMySelf.isNotEmpty)
+                      AboutMyselfCard(content: user.aboutMySelf),
+                    if (user.aboutMySelf.isNotEmpty) const SizedBox(height: 16),
 
                     // Contacts Section
                     ContactsCard(
@@ -49,40 +58,41 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // Location Section
-                    LocationCard(location: user.location),
-                    const SizedBox(height: 16),
+                    if (user.location.isNotEmpty)
+                      LocationCard(location: user.location),
+                    if (user.location.isNotEmpty) const SizedBox(height: 16),
 
                     // Hard Skills Section
-                    HardSkillsCard(skills: user.hardSkills),
-                    const SizedBox(height: 16),
+                    if (user.hardSkills.isNotEmpty)
+                      HardSkillsCard(skills: user.hardSkills),
+                    if (user.hardSkills.isNotEmpty) const SizedBox(height: 16),
 
                     // Current Projects Section
-                    Builder(
-                      builder: (context) {
-                        final isDarkMode =
-                            Theme.of(context).brightness == Brightness.dark;
-                        return Text(
-                          '📁 Current Projects',
-                          style: isDarkMode
-                              ? AppTextStyles.darkHeadingSmall
-                              : AppTextStyles.headingSmall,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    ...user.currentProjects.map((currentProject) {
-                      return Column(
-                        children: [
-                          // CurrentProjectCard(
-                          //   title: currentProject.title,
-                          //   subtitle: currentProject.subtitle,
-                          // ),
-                          SizedBox(height: 8),
-                        ],
-                      );
-                    }),
+                    if (isCurrentUser)
+                      Builder(
+                        builder: (context) {
+                          final isDarkMode =
+                              Theme.of(context).brightness == Brightness.dark;
+                          return Text(
+                            '📁 Current Projects',
+                            style: isDarkMode
+                                ? AppTextStyles.darkHeadingSmall
+                                : AppTextStyles.headingSmall,
+                          );
+                        },
+                      ),
+                    if (isCurrentUser) const SizedBox(height: 12),
+                    if (isCurrentUser)
+                      ...user.currentProjects.map((currentProject) {
+                        return Column(children: [const SizedBox(height: 8)]);
+                      }),
 
-                    // Большой отступ внизу для удобного скролла над BottomNavigationBar
+                    // Telegram contact button if not current user
+                    if (!isCurrentUser) ...[
+                      TelegramBtn(telegramLink: userTelegramLink),
+                    ],
+
+                    // Bottom padding for comfortable scrolling
                     const SizedBox(height: 100),
                   ],
                 ),
