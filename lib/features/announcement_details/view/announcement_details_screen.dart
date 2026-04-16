@@ -16,6 +16,21 @@ class AnnouncementDetailsScreen extends StatelessWidget {
     this.announcement,
   });
 
+  void _showAuthorProfile(BuildContext context) {
+    print(
+      '[AnnouncementDetailsScreen] Opening author profile for: ${announcement?.userName}',
+    );
+    print('[AnnouncementDetailsScreen] Author ID: ${announcement?.userId}');
+    print(
+      '[AnnouncementDetailsScreen] Telegram: ${announcement?.telegramLink}',
+    );
+
+    context.go(
+      '/home/user/${announcement?.userId}',
+      extra: announcement?.telegramLink,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (announcement == null) {
@@ -91,7 +106,10 @@ class AnnouncementDetailsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
-                    AuthorCard(announcement: announcement!),
+                    AuthorCard(
+                      announcement: announcement!,
+                      onTap: () => _showAuthorProfile(context),
+                    ),
                     const SizedBox(height: 14),
                     EventDetailsCard(announcement: announcement!),
                     const SizedBox(height: 14),

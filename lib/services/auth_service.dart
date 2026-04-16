@@ -220,22 +220,17 @@ class AuthService implements AuthInterface {
     }
   }
 
-  // Явное обновление данных пользователя из Firestore
-  // используется после обновления профиля, так как onAuthStateChanged не срабатывает при изменении данных в Firestore
-  Future<MyUser?> refreshUserData({required String userId}) async {
+  // Загрузить пользователя по ID (для просмотра профиля другого пользователя)
+  Future<MyUser?> getUserById({required String userId}) async {
     try {
-      final user = firebaseAuth.currentUser;
-      if (user == null) return null;
-
       final userDoc = await firestore.collection('users').doc(userId).get();
-      final data = userDoc.data();
+      if (!userDoc.exists) return null;
 
-      if (data == null) return null;
-
+      final data = userDoc.data()!;
       return MyUser(
-        uid: user.uid,
+        uid: userId,
         fullName: data['fullName'] ?? "User",
-        username: data['username'] ?? user.email ?? "username",
+        username: data['username'] ?? "username",
         avatarLink: data['avatarLink'] ?? "avatarLink",
         universityName: data['universityName'] ?? "universityName",
         currentCourse: data['currentCourse'] ?? 1,
@@ -244,7 +239,7 @@ class AuthService implements AuthInterface {
         connectionsCount: data['connectionsCount'] ?? 0,
         achievementsCount: data['achievementsCount'] ?? 0,
         aboutMySelf: data['aboutMySelf'] ?? "",
-        email: user.email ?? "",
+        email: data['email'] ?? "",
         github: data['github'] ?? "",
         linkedin: data['linkedin'] ?? "",
         location: data['location'] ?? "",
@@ -253,6 +248,17 @@ class AuthService implements AuthInterface {
         currentProjects: [],
         availability: data['availability'] ?? 'available',
       );
+    } catch (e) {
+      print('[AuthService] Error in getUserById: $e');
+      return null;
+    }
+  }
+
+  // Явное обновление данных пользователя из Firestore
+  // используется после обновления профиля, так как onAuthStateChanged не срабатывает при изменении данных в Firestore
+  Future<MyUser?> refreshUserData({required String userId}) async {
+    try {
+      return getUserById(userId: userId);
     } catch (e) {
       print('[AuthService] Error in refreshUserData: $e');
       return null;
@@ -447,9 +453,7 @@ class AuthService implements AuthInterface {
       if (eventTypes.isNotEmpty) {
         print('[AuthService] Filtering by eventTypes on client: $eventTypes');
         announcements = announcements
-            .where(
-              (a) => a.eventType != null && eventTypes.contains(a.eventType),
-            )
+            .where((a) => eventTypes.contains(a.eventType))
             .toList();
       }
 

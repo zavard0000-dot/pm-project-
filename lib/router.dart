@@ -5,6 +5,7 @@ import 'package:teamup/features/auth/view/login_screen.dart';
 import 'package:teamup/features/auth/view/signup_screen.dart';
 import 'package:teamup/features/edit_profile/views/edit_profile_screen.dart';
 import 'package:teamup/features/home/view/home_screen.dart';
+import 'package:teamup/features/home/tabs/profile_tab/tab_view/profile_tab_screen.dart';
 import 'package:teamup/features/onboarding/view/onboarding_screen.dart';
 import 'package:teamup/features/settings/settings.dart';
 import 'package:teamup/models/models.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String settings = '/home/settings';
   static const String editProfile = '/home/edit-profile';
   static const String announcementDetails = '/home/announcement/:id';
+  static const String userProfile = '/home/user/:userId';
 }
 
 GoRouter createAppRouter(MyAuthProvider authProvider) {
@@ -135,6 +137,20 @@ GoRouter createAppRouter(MyAuthProvider authProvider) {
               return AnnouncementDetailsScreen(
                 announcementId: announcementId,
                 announcement: announcement,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'user/:userId',
+            name: 'userProfile',
+            builder: (context, state) {
+              final userId = state.pathParameters['userId'] ?? '';
+              final userTelegramLink = state.extra as String?;
+              print('[Router] Opening user profile: $userId');
+              return ProfileScreen(
+                isCurrentUser: false,
+                userTelegramLink: userTelegramLink,
+                userId: userId,
               );
             },
           ),

@@ -5,8 +5,9 @@ import 'package:teamup/widgets/widgets.dart';
 
 class AuthorCard extends StatelessWidget {
   final Announcement announcement;
+  final VoidCallback? onTap;
 
-  const AuthorCard({required this.announcement});
+  const AuthorCard({required this.announcement, this.onTap});
 
   String _getTimeAgo(DateTime? date) {
     if (date == null) return 'давно';
@@ -30,75 +31,78 @@ class AuthorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return BaseCard(
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: announcement.userName != null
-                ? Container(
-                    width: 58,
-                    height: 58,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primaryPurple.withValues(alpha: 0.7),
-                    ),
-                    child: Center(
-                      child: Text(
-                        (announcement.userName ?? 'A')[0].toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: onTap,
+      child: BaseCard(
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(999),
+              child: announcement.userName != null
+                  ? Container(
+                      width: 58,
+                      height: 58,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.primaryPurple.withValues(alpha: 0.7),
+                      ),
+                      child: Center(
+                        child: Text(
+                          (announcement.userName ?? 'A')[0].toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                    )
+                  : Container(
+                      width: 58,
+                      height: 58,
+                      color: Colors.grey,
+                      child: Icon(Icons.person, color: Colors.white),
                     ),
-                  )
-                : Container(
-                    width: 58,
-                    height: 58,
-                    color: Colors.grey,
-                    child: Icon(Icons.person, color: Colors.white),
-                  ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  announcement.userName ?? 'Неизвестный пользователь',
-                  style: AppTextStyles.headingMedium.copyWith(
-                    color: isDarkMode
-                        ? AppColors.darkTextPrimary
-                        : AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (announcement.userUniversity != null ||
-                    announcement.userCourse != null)
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    '${announcement.userUniversity ?? ''}'
-                    '${announcement.userCourse != null ? ', ${announcement.userCourse} курс' : ''}',
-                    style: AppTextStyles.bodyMedium.copyWith(
+                    announcement.userName ?? 'Неизвестный пользователь',
+                    style: AppTextStyles.headingMedium.copyWith(
+                      color: isDarkMode
+                          ? AppColors.darkTextPrimary
+                          : AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  if (announcement.userUniversity != null ||
+                      announcement.userCourse != null)
+                    Text(
+                      '${announcement.userUniversity ?? ''}'
+                      '${announcement.userCourse != null ? ', ${announcement.userCourse} курс' : ''}',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'опубликовано ${_getTimeAgo(announcement.createdAt)}',
+                    style: AppTextStyles.captionMedium.copyWith(
                       color: isDarkMode
                           ? AppColors.darkTextSecondary
                           : AppColors.textSecondary,
                     ),
                   ),
-                const SizedBox(height: 2),
-                Text(
-                  'опубликовано ${_getTimeAgo(announcement.createdAt)}',
-                  style: AppTextStyles.captionMedium.copyWith(
-                    color: isDarkMode
-                        ? AppColors.darkTextSecondary
-                        : AppColors.textSecondary,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

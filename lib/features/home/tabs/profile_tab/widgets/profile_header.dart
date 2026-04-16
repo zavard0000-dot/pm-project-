@@ -6,8 +6,14 @@ import 'package:teamup/theme.dart';
 import 'stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.user});
   final MyUser user;
+  final bool isCurrentUser;
+
+  const ProfileHeader({
+    super.key,
+    required this.user,
+    this.isCurrentUser = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +57,36 @@ class ProfileHeader extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      context.go(AppRoutes.editProfile);
-                    },
+                  if (isCurrentUser)
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white),
+                      onPressed: () {
+                        context.go(AppRoutes.editProfile);
+                      },
+                    )
+                  else
+                    SizedBox(width: 48), // Placeholder for spacing
+                  Text(
+                    isCurrentUser ? 'My Profile' : 'Profile',
+                    style: AppTextStyles.appBarTitle,
                   ),
-                  const Text('My Profile', style: AppTextStyles.appBarTitle),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: Colors.white,
+                  if (isCurrentUser)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        context.go(AppRoutes.settings);
+                      },
+                    )
+                  else
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    onPressed: () {
-                      context.go(AppRoutes.settings);
-                    },
-                  ),
                 ],
               ),
               const SizedBox(height: 16),

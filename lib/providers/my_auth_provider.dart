@@ -70,6 +70,17 @@ class MyAuthProvider extends ChangeNotifier {
     }
   }
 
+  // Загрузить пользователя по ID (для просмотра профиля другого пользователя)
+  Future<MyUser?> loadUserById({required String userId}) async {
+    try {
+      print('[MyAuthProvider] Loading user: $userId');
+      return await _authService.getUserById(userId: userId);
+    } catch (e) {
+      print('[MyAuthProvider] Error loading user: $e');
+      return null;
+    }
+  }
+
   @override
   void dispose() {
     _streamSubscription?.cancel();
