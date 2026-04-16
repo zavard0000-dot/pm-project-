@@ -105,6 +105,9 @@ class MyAuthProvider extends ChangeNotifier {
   bool isFavorite(String announcementId) =>
       _favoriteAnnouncementIds.contains(announcementId);
 
+  // Получить список ID избранных объявлений
+  List<String> get favoriteAnnouncementIds => _favoriteAnnouncementIds;
+
   // Clear error
   void clearError() {
     _error = null;
