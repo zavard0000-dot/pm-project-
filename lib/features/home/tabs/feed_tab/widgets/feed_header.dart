@@ -13,6 +13,26 @@ class FeedHeader extends StatefulWidget {
 }
 
 class _FeedHeaderState extends State<FeedHeader> {
+  late TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchPressed() {
+    final query = _searchController.text.trim();
+    context.read<MyAuthProvider>().applySearchFilter(query);
+    print('[FeedHeader] Search button pressed - query: "$query"');
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -64,30 +84,95 @@ class _FeedHeaderState extends State<FeedHeader> {
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(110),
+            preferredSize: const Size.fromHeight(100),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: double.infinity,
+                // Поисковое поле
+                Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+                    horizontal: 16,
+                    vertical: 12,
                   ),
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: isDarkMode
-                        ? AppColors.darkInputBorder
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Selected: ${authProvider.announcements.length} announcements',
-                    style: TextStyle(
-                      color: isDarkMode
-                          ? AppColors.darkTextPrimary
-                          : AppColors.textPrimary,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          style: isDarkMode
+                              ? AppTextStyles.darkBodyMedium
+                              : AppTextStyles.bodyMedium,
+                          decoration: InputDecoration(
+                            hintText: 'Найти объявление...',
+                            hintStyle: TextStyle(
+                              color: isDarkMode
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.textSecondary,
+                            ),
+                            // prefixIcon: Icon(
+                            //   Icons.search_outlined,
+                            //   color: isDarkMode
+                            //       ? AppColors.darkTextSecondary
+                            //       : AppColors.textSecondary,
+                            //   size: 20,
+                            // ),
+                            filled: true,
+                            fillColor: isDarkMode
+                                ? AppColors.darkInputBorder
+                                : Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: isDarkMode
+                                    ? AppColors.darkInputBorder
+                                    : AppColors.inputBorder,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: isDarkMode
+                                    ? AppColors.darkInputBorder
+                                    : AppColors.inputBorder,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: isDarkMode
+                                    ? AppColors.primaryBlue
+                                    : AppColors.primaryBlue,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Кнопка поиска
+                      GestureDetector(
+                        onTap: _onSearchPressed,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? AppColors.primaryBlue
+                                : AppColors.primaryBlue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(

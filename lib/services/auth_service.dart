@@ -384,13 +384,15 @@ class AuthService implements AuthInterface {
     List<String> types = const [],
     List<String> skills = const [],
     List<String> eventTypes = const [],
+    String searchQuery = '',
+    String? excludeUserId,
     int limit = 30,
   }) async {
     try {
       print('[AuthService] Fetching announcements');
       Talker().debug(types.toString());
       print(
-        '[AuthService] Filters - Types: $types, Skills: $skills, Events: $eventTypes',
+        '[AuthService] Filters - Types: $types, Skills: $skills, Events: $eventTypes, Search: "$searchQuery", ExcludeUserId: $excludeUserId',
       );
 
       // Если типы пусты - не показываем ничего
@@ -431,6 +433,16 @@ class AuthService implements AuthInterface {
         return Announcement.fromJson(doc.data(), doc.id);
       }).toList();
 
+      // Исключаем объявления текущего пользователя
+      if (excludeUserId != null) {
+        print(
+          '[AuthService] Excluding announcements from user: $excludeUserId',
+        );
+        announcements = announcements
+            .where((a) => a.userId != excludeUserId)
+            .toList();
+      }
+
       // Фильтрация на клиенте по типам (person, project, team)
       // Применяем фильтр только если выбраны не все 3 типа
       if (types.isNotEmpty && types.length < 3) {
@@ -454,6 +466,19 @@ class AuthService implements AuthInterface {
         print('[AuthService] Filtering by eventTypes on client: $eventTypes');
         announcements = announcements
             .where((a) => eventTypes.contains(a.eventType))
+            .toList();
+      }
+
+      // Фильтрация по поисковому запросу (название и описание)
+      if (searchQuery.isNotEmpty) {
+        print('[AuthService] Filtering by search query: "$searchQuery"');
+        final query = searchQuery.toLowerCase();
+        announcements = announcements
+            .where(
+              (a) =>
+                  a.title.toLowerCase().contains(query) ||
+                  a.description.toLowerCase().contains(query),
+            )
             .toList();
       }
 

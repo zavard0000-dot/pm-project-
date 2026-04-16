@@ -21,6 +21,9 @@ class MyAuthProvider extends ChangeNotifier {
   // Избранные объявления
   List<String> _favoriteAnnouncementIds = [];
 
+  // Поиск
+  String _searchQuery = '';
+
   // Фильтры для объявлений
   List<String> selectedTypes = ['person', 'team', 'project'];
   List<String> selectedSkills = [];
@@ -128,6 +131,8 @@ class MyAuthProvider extends ChangeNotifier {
         types: types ?? selectedTypes,
         skills: skills ?? selectedSkills,
         eventTypes: eventTypes ?? selectedEventTypes,
+        searchQuery: _searchQuery,
+        excludeUserId: _user?.uid,
         limit: 30,
       );
 
@@ -139,7 +144,9 @@ class MyAuthProvider extends ChangeNotifier {
       _isLoadingAnnouncements = false;
       notifyListeners();
 
-      print('[MyAuthProvider] Loaded ${_announcements.length} announcements');
+      print(
+        '[MyAuthProvider] Loaded ${_announcements.length} announcements with search: "$_searchQuery"',
+      );
     } catch (e) {
       print('[MyAuthProvider] Error loading announcements: $e');
       _isLoadingAnnouncements = false;
@@ -157,6 +164,17 @@ class MyAuthProvider extends ChangeNotifier {
       types: types,
       skills: skills,
       eventTypes: eventTypes,
+    );
+  }
+
+  // Применить поиск по названию и описанию
+  Future<void> applySearchFilter(String query) async {
+    _searchQuery = query;
+    print('[MyAuthProvider] Applying search filter: "$query"');
+    await loadAnnouncements(
+      types: selectedTypes,
+      skills: selectedSkills,
+      eventTypes: selectedEventTypes,
     );
   }
 
