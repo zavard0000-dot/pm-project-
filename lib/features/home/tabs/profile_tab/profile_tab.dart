@@ -1,1 +1,1 @@
-export 'tab_view/tab_view.dart';
+export 'tab_view/profile_tab_screen.dart';
