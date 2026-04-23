@@ -13,6 +13,7 @@ class TelegramBtn extends StatelessWidget {
     if (telegramLink == null || telegramLink!.isEmpty) {
       print('[TelegramBtn] Telegram link is null or empty');
       if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Telegram link not available')),
         );
@@ -21,28 +22,28 @@ class TelegramBtn extends StatelessWidget {
     }
 
     try {
-      // Обработка разных форматов ссылок
-      String urlToLaunch = telegramLink!;
+      String username = telegramLink!.replaceFirst('@', '');
 
-      // Если это просто юзернейм (например @username), преобразовать в полную ссылку
-      if (telegramLink!.startsWith('@')) {
-        urlToLaunch = 'https://t.me/${telegramLink!.replaceFirst('@', '')}';
-      }
-      // Если это уже полная ссылка
-      else if (!telegramLink!.startsWith('http') &&
-          !telegramLink!.startsWith('tg://')) {
-        urlToLaunch = 'https://t.me/$telegramLink';
-      }
+      // Попытаемся открыть app-версию Telegram
+      final Uri appUri = Uri.parse('tg://resolve?domain=$username');
 
-      print('[TelegramBtn] Final URL to launch: $urlToLaunch');
+      // Fallback на веб-версию
+      final Uri webUri = Uri.parse('https://t.me/$username');
 
-      final Uri telegramUri = Uri.parse(urlToLaunch);
-      if (await canLaunchUrl(telegramUri)) {
-        await launchUrl(telegramUri);
-        print('[TelegramBtn] Successfully launched Telegram link');
+      print('[TelegramBtn] Trying app URI: $appUri');
+      print('[TelegramBtn] Fallback web URI: $webUri');
+
+      // Пытаемся открыть через app
+      if (await canLaunchUrl(appUri)) {
+        print('[TelegramBtn] Launching app URI');
+        await launchUrl(appUri);
+      } else if (await canLaunchUrl(webUri)) {
+        print('[TelegramBtn] Launching web URI');
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
       } else {
-        print('[TelegramBtn] Cannot launch URL: $urlToLaunch');
+        print('[TelegramBtn] Cannot launch any URI');
         if (context.mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Could not open Telegram')),
           );
@@ -51,6 +52,7 @@ class TelegramBtn extends StatelessWidget {
     } catch (e) {
       print('[TelegramBtn] Error: $e');
       if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
