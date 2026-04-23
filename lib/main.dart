@@ -23,7 +23,15 @@ late final MyAuthProvider _authProvider;
 late final GoRouter _appRouter;
 
 void main() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    print('Firebase init error: $e');
+  }
 
   // Web URL strategy (убираем # из url)
   setPathUrlStrategy();
@@ -41,11 +49,7 @@ class TeamUpApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-          value: _authProvider,
-        ),
-      ],
+      providers: [ChangeNotifierProvider.value(value: _authProvider)],
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: themeNotifier,
         builder: (context, themeMode, child) {
