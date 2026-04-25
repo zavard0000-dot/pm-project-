@@ -103,6 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     username: currentUser.fullName,
                                     avatarLink: currentUser.avatarLink,
                                     radius: 32,
+                                    showBorder: true,
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
