@@ -5,6 +5,7 @@ import 'package:teamup/router.dart';
 import 'package:teamup/features/settings/widgets/widgets.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
+import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/main.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -55,14 +56,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Color.fromARGB(255, 113, 18, 61),
                           ]
                         : [
-                            Color(0xFF2563EB),
-                            Color(0xFF7C3AED),
-                            Color(0xFFDB2777),
+                            AppColors.primaryBlue,
+                            AppColors.primaryPurple,
+                            AppColors.accentPink,
                           ]),
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  // borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
                 ),
                 child: SafeArea(
                   child: Column(
@@ -99,13 +99,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  CircleAvatar(
+                                  UserAvatar(
+                                    username: currentUser.fullName,
+                                    avatarLink: currentUser.avatarLink,
                                     radius: 32,
-                                    backgroundImage: NetworkImage(
-                                      currentUser.avatarLink,
-                                    ),
-                                    onBackgroundImageError:
-                                        (exception, stackTrace) {},
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -118,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           style: AppTextStyles.whiteBodyLarge,
                                         ),
                                         Text(
-                                          currentUser.username,
+                                          '@${currentUser.username}',
                                           style: AppTextStyles.whiteSubtle,
                                         ),
                                       ],

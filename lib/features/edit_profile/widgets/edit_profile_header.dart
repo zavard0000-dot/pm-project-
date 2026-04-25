@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teamup/theme.dart';
+import 'package:teamup/widgets/widgets.dart';
 
 class EditProfileHeader extends StatelessWidget {
   const EditProfileHeader({super.key});
@@ -59,16 +60,7 @@ class EditProfileHeader extends StatelessWidget {
 
               SizedBox(height: 24),
 
-              CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 55,
-                  backgroundImage: NetworkImage(
-                    'https://i.pravatar.cc/150?img=5',
-                  ),
-                ),
-              ),
+              UserAvatar(username: 'User', avatarLink: null, radius: 60),
               SizedBox(height: 8),
               Text(
                 "нажми для редактирование профеля",

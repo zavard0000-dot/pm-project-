@@ -36,33 +36,10 @@ class AuthorCard extends StatelessWidget {
       child: BaseCard(
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(999),
-              child: announcement.userName != null
-                  ? Container(
-                      width: 58,
-                      height: 58,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primaryPurple.withValues(alpha: 0.7),
-                      ),
-                      child: Center(
-                        child: Text(
-                          (announcement.userName ?? 'A')[0].toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(
-                      width: 58,
-                      height: 58,
-                      color: Colors.grey,
-                      child: Icon(Icons.person, color: Colors.white),
-                    ),
+            UserAvatar(
+              username: announcement.userName,
+              avatarLink: announcement.userAvatarLink,
+              radius: 29,
             ),
             const SizedBox(width: 12),
             Expanded(

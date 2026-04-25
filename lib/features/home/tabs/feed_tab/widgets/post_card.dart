@@ -3,20 +3,17 @@ import 'package:go_router/go_router.dart';
 import 'package:teamup/models/announcement.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
-import '../../../../../widgets/telegram_btn.dart';
 
 class PostCard extends StatelessWidget {
   final Announcement announcement;
   final bool isFavorite;
   final Future<void> Function()? onFavoriteToggle;
-  final bool isAvatarText;
 
   const PostCard({
     Key? key,
     required this.announcement,
     this.isFavorite = false,
     this.onFavoriteToggle,
-    this.isAvatarText = false,
   }) : super(key: key);
 
   String _getTypeLabel(String type) {
@@ -75,22 +72,10 @@ class PostCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
+                UserAvatar(
+                  username: announcement.userName,
+                  avatarLink: announcement.userAvatarLink,
                   radius: 20,
-                  backgroundColor: isAvatarText
-                      ? AppColors.primaryPurple.withValues(alpha: 0.7)
-                      : (isDarkMode
-                            ? AppColors.darkSurfaceVariant
-                            : Colors.grey[300]!),
-                  backgroundImage: !isAvatarText
-                      ? const NetworkImage('https://i.pravatar.cc/150?img=5')
-                      : null,
-                  child: isAvatarText
-                      ? Text(
-                          (announcement.userName ?? 'A')[0],
-                          style: const TextStyle(color: Colors.white),
-                        )
-                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(

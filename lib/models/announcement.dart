@@ -17,6 +17,7 @@ class Announcement {
   // User data to display in the post
   final String? userId;
   final String? userName;
+  final String? userAvatarLink;
   final int? userCourse;
   final String? userUniversity;
 
@@ -38,6 +39,7 @@ class Announcement {
     this.requiredTeamSize,
     this.userId,
     this.userName,
+    this.userAvatarLink,
     this.userCourse,
     this.userUniversity,
     this.createdAt,
@@ -60,6 +62,7 @@ class Announcement {
       'requiredTeamSize': requiredTeamSize,
       'userId': userId,
       'userName': userName,
+      'userAvatarLink': userAvatarLink,
       'userCourse': userCourse,
       'userUniversity': userUniversity,
       'createdAt': createdAt?.toIso8601String(),
@@ -84,6 +87,7 @@ class Announcement {
       requiredTeamSize: json['requiredTeamSize'],
       userId: json['userId'],
       userName: json['userName'],
+      userAvatarLink: json['userAvatarLink'],
       userCourse: json['userCourse'],
       userUniversity: json['userUniversity'],
       createdAt: _parseDateTime(json['createdAt']),

@@ -109,6 +109,7 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
             : null,
         userId: currentUser.uid,
         userName: currentUser.fullName,
+        userAvatarLink: currentUser.avatarLink,
         userCourse: currentUser.currentCourse,
         userUniversity: currentUser.universityName,
       );

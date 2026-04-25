@@ -349,6 +349,7 @@ class AuthService implements AuthInterface {
         'requiredTeamSize': announcement.requiredTeamSize,
         'userId': announcement.userId,
         'userName': announcement.userName,
+        'userAvatarLink': announcement.userAvatarLink,
         'userCourse': announcement.userCourse,
         'userUniversity': announcement.userUniversity,
         'createdAt': FieldValue.serverTimestamp(),

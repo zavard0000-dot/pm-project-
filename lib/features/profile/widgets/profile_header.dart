@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:teamup/models/models.dart';
 import 'package:teamup/router.dart';
 import 'package:teamup/theme.dart';
+import 'package:teamup/widgets/widgets.dart';
 import 'stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -86,13 +87,11 @@ class ProfileHeader extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               // Avatar
-              CircleAvatar(
+              UserAvatar(
+                username: user.username,
+                avatarLink: user.avatarLink,
                 radius: 45,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 42,
-                  backgroundImage: NetworkImage(user.avatarLink),
-                ),
+                showBorder: true,
               ),
               const SizedBox(height: 16),
               // User info

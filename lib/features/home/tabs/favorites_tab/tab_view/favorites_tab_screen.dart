@@ -116,9 +116,6 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                                 isDarkMode,
                               );
                             },
-                            isAvatarText:
-                                announcement.userName != null &&
-                                announcement.userName!.isNotEmpty,
                           ),
                         ],
                       ),
