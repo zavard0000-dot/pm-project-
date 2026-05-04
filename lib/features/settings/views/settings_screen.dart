@@ -223,6 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onChanged: (value) {
                           setState(() => emailNotifications = value);
                           settingsService.emailNotifications = value;
+                          if (value) _showNotImplemented();
                         },
                         activeColor: Color(0xFF111827),
                       ),
@@ -236,6 +237,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onChanged: (value) {
                           setState(() => messagesNotifications = value);
                           settingsService.messagesNotifications = value;
+                          if (value) _showNotImplemented();
                         },
                         activeColor: Color(0xFF111827),
                       ),

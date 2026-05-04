@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     const FeedTabScreen(),
     const FavoritesTabScreen(),
     const CreateTabScreen(),
-    const Center(child: Text('Notifications Screen (WIP)')),
+    const NotificationsTabScreen(),
     const ProfileScreen(),
   ];
 

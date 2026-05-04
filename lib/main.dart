@@ -13,9 +13,11 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamup/services/settings_service.dart';
 import 'package:teamup/services/notification_service.dart';
+import 'package:teamup/services/notification_history_service.dart';
 
 ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 late final SettingsService settingsService;
+late final NotificationHistoryService notificationHistoryService;
 
 final authService = AuthService(
   firebaseAuth: FirebaseAuth.instance,
@@ -32,6 +34,7 @@ void main() async {
   // Инициализируем SharedPreferences и SettingsService
   final prefs = await SharedPreferences.getInstance();
   settingsService = SettingsService(prefs);
+  notificationHistoryService = NotificationHistoryService(prefs);
 
   // Инициализируем уведомления
   await NotificationService.init();
