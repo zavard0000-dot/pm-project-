@@ -12,6 +12,7 @@ import 'firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamup/services/settings_service.dart';
+import 'package:teamup/services/notification_service.dart';
 
 ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 late final SettingsService settingsService;
@@ -31,6 +32,9 @@ void main() async {
   // Инициализируем SharedPreferences и SettingsService
   final prefs = await SharedPreferences.getInstance();
   settingsService = SettingsService(prefs);
+
+  // Инициализируем уведомления
+  await NotificationService.init();
 
   // Устанавливаем сохраненную тему
   final savedTheme = settingsService.themeMode;

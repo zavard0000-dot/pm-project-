@@ -7,6 +7,7 @@ import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/main.dart';
+import 'package:teamup/services/notification_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -200,9 +201,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       iconColor: Color(0xFF7C3AED),
                       trailing: Switch(
                         value: pushNotifications,
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() => pushNotifications = value);
                           settingsService.pushNotifications = value;
+                          if (value) {
+                            await NotificationService.requestPermissions();
+                            await NotificationService.scheduleDailyNotification();
+                          } else {
+                            await NotificationService.cancelDailyNotification();
+                          }
                         },
                         activeColor: Color(0xFF111827),
                       ),
