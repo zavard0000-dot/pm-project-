@@ -10,8 +10,11 @@ import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:teamup/router.dart';
 import 'firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:teamup/services/settings_service.dart';
 
 ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+late final SettingsService settingsService;
 
 final authService = AuthService(
   firebaseAuth: FirebaseAuth.instance,
@@ -24,6 +27,14 @@ late final GoRouter _appRouter;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Инициализируем SharedPreferences и SettingsService
+  final prefs = await SharedPreferences.getInstance();
+  settingsService = SettingsService(prefs);
+
+  // Устанавливаем сохраненную тему
+  final savedTheme = settingsService.themeMode;
+  themeNotifier.value = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
 
   try {
     await Firebase.initializeApp(

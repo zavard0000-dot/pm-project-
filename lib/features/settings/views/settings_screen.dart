@@ -16,9 +16,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool pushNotifications = true;
-  bool emailNotifications = true;
-  bool messagesNotifications = false;
+  bool pushNotifications = settingsService.pushNotifications;
+  bool emailNotifications = settingsService.emailNotifications;
+  bool messagesNotifications = settingsService.messagesNotifications;
   late bool isDarkTheme;
 
   void _showNotImplemented() {
@@ -202,6 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: pushNotifications,
                         onChanged: (value) {
                           setState(() => pushNotifications = value);
+                          settingsService.pushNotifications = value;
                         },
                         activeColor: Color(0xFF111827),
                       ),
@@ -214,6 +215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: emailNotifications,
                         onChanged: (value) {
                           setState(() => emailNotifications = value);
+                          settingsService.emailNotifications = value;
                         },
                         activeColor: Color(0xFF111827),
                       ),
@@ -226,6 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: messagesNotifications,
                         onChanged: (value) {
                           setState(() => messagesNotifications = value);
+                          settingsService.messagesNotifications = value;
                         },
                         activeColor: Color(0xFF111827),
                       ),
@@ -268,6 +271,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           themeNotifier.value = value
                               ? ThemeMode.dark
                               : ThemeMode.light;
+                          settingsService.themeMode = value ? 'dark' : 'light';
                           print('[SETTINGS] Dark theme toggled: $value');
                         },
                         activeColor: Color(0xFF111827),
