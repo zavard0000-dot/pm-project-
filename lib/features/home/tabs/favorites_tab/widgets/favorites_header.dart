@@ -8,32 +8,33 @@ class FavoritesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [
+                  const Color(0xFF1E3A8A),
+                  const Color(0xFF581C87),
+                  const Color(0xFF7F1D1D),
+                ]
+              : [
+                  AppColors.primaryBlue,
+                  AppColors.primaryPurple,
+                  AppColors.accentPink,
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
           padding: const EdgeInsets.only(
             top: 16,
             bottom: 32,
             left: 24,
             right: 24,
-          ),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isDarkMode
-                  ? [
-                      const Color(0xFF1E3A8A),
-                      const Color(0xFF581C87),
-                      const Color(0xFF7F1D1D),
-                    ]
-                  : [
-                      AppColors.primaryBlue,
-                      AppColors.primaryPurple,
-                      AppColors.accentPink,
-                    ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +56,7 @@ class FavoritesHeader extends StatelessWidget {
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

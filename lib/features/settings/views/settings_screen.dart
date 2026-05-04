@@ -21,6 +21,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool messagesNotifications = false;
   late bool isDarkTheme;
 
+  void _showNotImplemented() {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('This feature is not implemented yet'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -174,11 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.lock_outline,
                       label: 'Account Settings',
                       iconColor: Color(0xFF7C3AED),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Account Settings')),
-                        );
-                      },
+                      onTap: _showNotImplemented,
                     ),
                   ],
                 ),
@@ -279,33 +285,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.help_outline,
                       label: 'Help & FAQ',
                       iconColor: Color(0xFFFF8C42),
-                      onTap: () {
-                        print('[SETTINGS] Help and FAQ tapped');
-                      },
+                      onTap: _showNotImplemented,
                     ),
                     SettingMenuItem(
                       icon: Icons.description_outlined,
                       label: 'Terms of Use',
                       iconColor: Color(0xFFFF8C42),
-                      onTap: () {
-                        print('[SETTINGS] Terms of use tapped');
-                      },
+                      onTap: _showNotImplemented,
                     ),
                     SettingMenuItem(
                       icon: Icons.info_outline,
                       label: 'About App',
                       iconColor: Color(0xFFFF8C42),
-                      onTap: () {
-                        print('[SETTINGS] About app tapped');
-                      },
+                      onTap: _showNotImplemented,
                     ),
                     SettingMenuItem(
                       icon: Icons.share_outlined,
                       label: 'Share App',
                       iconColor: Color(0xFFFF8C42),
-                      onTap: () {
-                        print('[SETTINGS] Share app tapped');
-                      },
+                      onTap: _showNotImplemented,
                     ),
                   ],
                 ),

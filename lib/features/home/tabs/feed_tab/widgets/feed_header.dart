@@ -50,35 +50,41 @@ class _FeedHeaderState extends State<FeedHeader> {
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
               color: isDarkMode ? AppColors.darkSurface : AppColors.primaryBlue,
-              child: Padding(
-                padding: EdgeInsets.all(16).copyWith(top: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'TeamUp Almaty',
-                          style: AppTextStyles.whiteHeadingLarge,
-                        ),
-                        Text(
-                          'Find your dream team',
-                          style: AppTextStyles.whiteSubtle,
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: CircleAvatar(
-                        backgroundColor: isDarkMode
-                            ? AppColors.darkInputBorder
-                            : Colors.white24,
-                        child: Icon(Icons.favorite_border, color: Colors.white),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'TeamUp Almaty',
+                            style: AppTextStyles.whiteHeadingLarge,
+                          ),
+                          Text(
+                            'Find your dream team',
+                            style: AppTextStyles.whiteSubtle,
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: CircleAvatar(
+                          backgroundColor: isDarkMode
+                              ? AppColors.darkInputBorder
+                              : Colors.white24,
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

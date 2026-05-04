@@ -126,19 +126,19 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
         // Stats cards (positioned at bottom)
-        Positioned(
-          bottom: -40,
-          left: 24,
-          right: 24,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              StatCard(number: user.projectsCount, label: 'Projects'),
-              StatCard(number: user.connectionsCount, label: 'Connections'),
-              StatCard(number: user.achievementsCount, label: 'Achievements'),
-            ],
-          ),
-        ),
+        // Positioned(
+        //   bottom: -40,
+        //   left: 24,
+        //   right: 24,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       StatCard(number: user.projectsCount, label: 'Projects'),
+        //       StatCard(number: user.connectionsCount, label: 'Connections'),
+        //       StatCard(number: user.achievementsCount, label: 'Achievements'),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

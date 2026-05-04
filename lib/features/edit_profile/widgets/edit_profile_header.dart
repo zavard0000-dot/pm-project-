@@ -14,15 +14,6 @@ class EditProfileHeader extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          // Динамическая высота за счет padding
-          padding: const EdgeInsets.only(
-            top: 40, // Отступ для SafeArea (статус-бара)
-            bottom:
-                24, // ВАЖНО: Освобождаем место снизу для наезжающих карточек
-            left: 16,
-            right: 16,
-          ),
-
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isDarkMode
@@ -40,33 +31,49 @@ class EditProfileHeader extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              // Динамическая высота за счет padding
+              padding: const EdgeInsets.only(
+                top: 16,
+                bottom:
+                    24, // ВАЖНО: Освобождаем место снизу для наезжающих карточек
+                left: 16,
+                right: 16,
+              ),
+              child: Column(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.pop();
+                        },
+                        icon: Icon(Icons.arrow_back),
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 48),
+                      Icon(Icons.star_outline_sharp, color: Colors.white),
+                      Text(
+                        " Edit Profile",
+                        style: AppTextStyles.whiteHeadingLarge,
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 48),
-                  Icon(Icons.star_outline_sharp, color: Colors.white),
-                  Text(" Edit Profile", style: AppTextStyles.whiteHeadingLarge),
+
+                  SizedBox(height: 24),
+
+                  UserAvatar(username: 'User', avatarLink: null, radius: 60),
+                  SizedBox(height: 8),
+                  Text(
+                    "нажми для редактирование профеля",
+                    style: AppTextStyles.whiteCaption,
+                  ),
                 ],
               ),
-
-              SizedBox(height: 24),
-
-              UserAvatar(username: 'User', avatarLink: null, radius: 60),
-              SizedBox(height: 8),
-              Text(
-                "нажми для редактирование профеля",
-                style: AppTextStyles.whiteCaption,
-              ),
-            ],
+            ),
           ),
         ),
       ],

@@ -72,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
           // Profile Header
           ProfileHeader(user: user, isCurrentUser: isCurrentUser),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 24),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
