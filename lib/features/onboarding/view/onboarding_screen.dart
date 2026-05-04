@@ -29,30 +29,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingPage> pages = [
     OnboardingPage(
-      title: 'Найди свою команду',
+      title: 'Find your team',
       description:
-          'Подбирай участников для квалатонов, учебных практик и стартапов',
+          'Select participants for hackathons, internships and startups',
       icon: Icons.group,
       color: Colors.blue,
     ),
     OnboardingPage(
-      title: 'Фильтруй по навыкам',
+      title: 'Filter by skills',
       description:
-          'Ищи специалистов с нужными технологиями и опытом для своего проекта',
+          'Search for specialists with the right technologies and experience for your project',
       icon: Icons.search,
       color: Colors.pink,
     ),
     OnboardingPage(
-      title: 'Выбирай формат',
-      description:
-          'Краткосрочные проекты для квалатонов или долгосрочное сотрудничество',
+      title: 'Choose a format',
+      description: 'Short-term hackathon projects or long-term collaboration',
       icon: Icons.flash_on,
       color: Colors.orange,
     ),
     OnboardingPage(
-      title: 'Начни сейчас',
+      title: 'Get started now',
       description:
-          'Создай профиль и публикуй объявления в поиске участников команды',
+          'Create a profile and post announcements looking for team members',
       icon: Icons.play_arrow,
       color: Colors.teal,
     ),
@@ -93,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPressed: () {
                   context.go('/login');
                 },
-                child: const Text('Пропустить'),
+                child: const Text('Skip'),
               ),
             ),
           ),
@@ -147,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         }
                       },
                       child: Text(
-                        _currentIndex == pages.length - 1 ? 'Начать' : 'Далее',
+                        _currentIndex == pages.length - 1 ? 'Start' : 'Next',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

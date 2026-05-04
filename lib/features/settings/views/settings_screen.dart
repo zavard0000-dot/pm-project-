@@ -79,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             onPressed: () => Navigator.pop(context),
                           ),
                           const Text(
-                            'Настройки',
+                            'Settings',
                             style: AppTextStyles.appBarTitle,
                           ),
                           SizedBox(width: 48),
@@ -160,11 +160,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 // Profile Section
                 SettingSection(
-                  title: '👤 Профиль',
+                  title: '👤 Profile',
                   children: [
                     SettingMenuItem(
                       icon: Icons.person_outline,
-                      label: 'Редактировать профиль',
+                      label: 'Edit Profile',
                       iconColor: Color(0xFF7C3AED),
                       onTap: () {
                         context.go(AppRoutes.editProfile);
@@ -172,11 +172,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.lock_outline,
-                      label: 'Настройки аккаунта',
+                      label: 'Account Settings',
                       iconColor: Color(0xFF7C3AED),
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Настройки аккаунта')),
+                          SnackBar(content: Text('Account Settings')),
                         );
                       },
                     ),
@@ -186,11 +186,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // Notifications Section
                 SettingSection(
-                  title: '🔔 Уведомления',
+                  title: '🔔 Notifications',
                   children: [
                     SettingMenuItem(
                       icon: Icons.notifications_outlined,
-                      label: 'Push-уведомления',
+                      label: 'Push Notifications',
                       iconColor: Color(0xFF7C3AED),
                       trailing: Switch(
                         value: pushNotifications,
@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.mail_outline,
-                      label: 'Email уведомления',
+                      label: 'Email Notifications',
                       iconColor: Color(0xFF7C3AED),
                       trailing: Switch(
                         value: emailNotifications,
@@ -214,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.message_outlined,
-                      label: 'Сообщения',
+                      label: 'Messages',
                       iconColor: Color(0xFF7C3AED),
                       trailing: Switch(
                         value: messagesNotifications,
@@ -230,11 +230,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // Preferences Section
                 SettingSection(
-                  title: '⚙️ Предпочтения',
+                  title: '⚙️ Preferences',
                   children: [
+                    /*
                     SettingMenuItem(
                       icon: Icons.language_outlined,
-                      label: 'Язык',
+                      label: 'Language',
                       iconColor: Color(0xFF10B981),
                       onTap: () {
                         print('[SETTINGS] Language selection tapped');
@@ -243,13 +244,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Русский', style: AppTextStyles.captionMedium),
+                          Text('English', style: AppTextStyles.captionMedium),
                         ],
                       ),
                     ),
+                    */
                     SettingMenuItem(
                       icon: Icons.brightness_4_outlined,
-                      label: 'Темная тема',
+                      label: 'Dark Theme',
                       iconColor: Color(0xFF00B4D8),
                       trailing: Switch(
                         value: isDarkTheme,
@@ -271,11 +273,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // Support Section
                 SettingSection(
-                  title: '🤝 Поддержка',
+                  title: '🤝 Support',
                   children: [
                     SettingMenuItem(
                       icon: Icons.help_outline,
-                      label: 'Помощь и ФАО',
+                      label: 'Help & FAQ',
                       iconColor: Color(0xFFFF8C42),
                       onTap: () {
                         print('[SETTINGS] Help and FAQ tapped');
@@ -283,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.description_outlined,
-                      label: 'Условия использования',
+                      label: 'Terms of Use',
                       iconColor: Color(0xFFFF8C42),
                       onTap: () {
                         print('[SETTINGS] Terms of use tapped');
@@ -291,7 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.info_outline,
-                      label: 'О приложении',
+                      label: 'About App',
                       iconColor: Color(0xFFFF8C42),
                       onTap: () {
                         print('[SETTINGS] About app tapped');
@@ -299,7 +301,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingMenuItem(
                       icon: Icons.share_outlined,
-                      label: 'Поделиться приложением',
+                      label: 'Share App',
                       iconColor: Color(0xFFFF8C42),
                       onTap: () {
                         print('[SETTINGS] Share app tapped');
@@ -330,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Icon(Icons.logout, color: AppColors.errorRed, size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          'Вывести из аккаунта',
+                          'Log Out',
                           style: AppTextStyles.errorText.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -346,7 +348,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Center(
                   child: Column(
                     children: [
-                      Text('Версия 1.0.0', style: AppTextStyles.captionMedium),
+                      Text('Version 1.0.0', style: AppTextStyles.captionMedium),
                       Text(
                         '© 2026 TeamFinder',
                         style: AppTextStyles.captionMedium,

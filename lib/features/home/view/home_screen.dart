@@ -51,13 +51,10 @@ class _MainScreenState extends State<MainScreen> {
         showSelectedLabels: true,
         showUnselectedLabels: true,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Главная',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.star_outline),
-            label: 'Избранное',
+            label: 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add, color: Colors.transparent),
@@ -65,11 +62,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications_none),
-            label: 'Уведомления',
+            label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            label: 'Профиль',
+            label: 'Profile',
           ),
         ],
       ),

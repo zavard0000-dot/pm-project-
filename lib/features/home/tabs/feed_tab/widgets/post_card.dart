@@ -19,11 +19,11 @@ class PostCard extends StatelessWidget {
   String _getTypeLabel(String type) {
     switch (type) {
       case 'project':
-        return '📌 Проект';
+        return '📌 Project';
       case 'team':
-        return '👥 Команда';
+        return '👥 Team';
       case 'person':
-        return '👤 Персона';
+        return '👤 Person';
       default:
         return '';
     }
@@ -35,15 +35,15 @@ class PostCard extends StatelessWidget {
     final difference = date.difference(now);
 
     if (difference.isNegative) {
-      return 'Истёк';
+      return 'Expired';
     } else if (difference.inDays > 30) {
       return '📅 ${date.day}.${date.month}.${date.year}';
     } else if (difference.inDays > 0) {
-      return '⏱ ${difference.inDays} дней';
+      return '⏱ ${difference.inDays} days';
     } else if (difference.inHours > 0) {
-      return '⏰ ${difference.inHours}ч';
+      return '⏰ ${difference.inHours}h';
     } else {
-      return '🔴 Сегодня';
+      return '🔴 Today';
     }
   }
 

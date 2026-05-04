@@ -62,7 +62,7 @@ class MyProfileTab extends StatelessWidget {
                         final isDarkMode =
                             Theme.of(context).brightness == Brightness.dark;
                         return Text(
-                          '📁 Текущие проекты',
+                          '📁 Current Projects',
                           style: isDarkMode
                               ? AppTextStyles.darkHeadingSmall
                               : AppTextStyles.headingSmall,
@@ -76,7 +76,7 @@ class MyProfileTab extends StatelessWidget {
                           final isDarkMode =
                               Theme.of(context).brightness == Brightness.dark;
                           return Text(
-                            'Нет активных проектов',
+                            'No active projects',
                             style: isDarkMode
                                 ? AppTextStyles.darkCaptionMedium
                                 : AppTextStyles.captionMedium,

@@ -103,7 +103,7 @@ class _FeedHeaderState extends State<FeedHeader> {
                               ? AppTextStyles.darkBodyMedium
                               : AppTextStyles.bodyMedium,
                           decoration: InputDecoration(
-                            hintText: 'Найти объявление...',
+                            hintText: 'Find announcement...',
                             hintStyle: TextStyle(
                               color: isDarkMode
                                   ? AppColors.darkTextSecondary

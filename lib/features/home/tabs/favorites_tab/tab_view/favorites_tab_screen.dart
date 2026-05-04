@@ -34,7 +34,7 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                   print('[FavoritesTabScreen] User not authenticated');
                   return Center(
                     child: Text(
-                      'Вы не авторизованы',
+                      'You are not authorized',
                       style: isDarkMode
                           ? AppTextStyles.darkBodyLarge
                           : AppTextStyles.bodyLarge,
@@ -72,14 +72,14 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Нет избранных объявлений',
+                          'No favorite announcements',
                           style: isDarkMode
                               ? AppTextStyles.darkHeadingSmall
                               : AppTextStyles.headingSmall,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Добавьте объявления в избранное,\nчтобы они появились здесь',
+                          'Add announcements to favorites,\nto see them here',
                           textAlign: TextAlign.center,
                           style: isDarkMode
                               ? AppTextStyles.darkBodyMedium
@@ -149,13 +149,13 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
               ? AppColors.darkSurface
               : AppColors.surface,
           title: Text(
-            'Удалить из избранного?',
+            'Remove from Favorites?',
             style: isDarkMode
                 ? AppTextStyles.darkHeadingSmall
                 : AppTextStyles.headingSmall,
           ),
           content: Text(
-            'Вы уверены, что хотите удалить это объявление из избранного?',
+            'Are you sure you want to remove this announcement from favorites?',
             style: isDarkMode
                 ? AppTextStyles.darkBodyMedium
                 : AppTextStyles.bodyMedium,
@@ -167,7 +167,7 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                 Navigator.of(dialogContext).pop();
               },
               child: Text(
-                'Отмена',
+                'Cancel',
                 style: TextStyle(
                   color: isDarkMode
                       ? AppColors.darkTextSecondary
@@ -192,7 +192,7 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Удалено из избранного',
+                          'Removed from favorites',
                           style: isDarkMode
                               ? AppTextStyles.darkBodyMedium
                               : AppTextStyles.bodyMedium,
@@ -210,7 +210,7 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Ошибка при удалении из избранного',
+                          'Error removing from favorites',
                           style: AppTextStyles.errorText,
                         ),
                         backgroundColor: AppColors.errorRed,
@@ -221,7 +221,7 @@ class _FavoritesTabScreenState extends State<FavoritesTabScreen> {
                 }
               },
               child: const Text(
-                'Удалить',
+                'Remove',
                 style: TextStyle(color: AppColors.errorRed),
               ),
             ),

@@ -43,13 +43,13 @@ class FavoritesHeader extends StatelessWidget {
                 children: [
                   Icon(Icons.star, color: Colors.white, size: 28),
                   const SizedBox(width: 12),
-                  Text('Избранное', style: AppTextStyles.whiteHeadingLarge),
+                  Text('Favorites', style: AppTextStyles.whiteHeadingLarge),
                 ],
               ),
               const SizedBox(height: 12),
               // Подсказка
               Text(
-                'Ваши сохраненные объявления',
+                'Your saved announcements',
                 style: AppTextStyles.whiteCaption,
               ),
             ],
