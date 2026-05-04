@@ -57,18 +57,18 @@ class MyProfileTab extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // Current Projects Section
-                    Builder(
-                      builder: (context) {
-                        final isDarkMode =
-                            Theme.of(context).brightness == Brightness.dark;
-                        return Text(
-                          '📁 Current Projects',
-                          style: isDarkMode
-                              ? AppTextStyles.darkHeadingSmall
-                              : AppTextStyles.headingSmall,
-                        );
-                      },
-                    ),
+                    // Builder(
+                    //   builder: (context) {
+                    //     final isDarkMode =
+                    //         Theme.of(context).brightness == Brightness.dark;
+                    //     return Text(
+                    //       '📁 Current Projects',
+                    //       style: isDarkMode
+                    //           ? AppTextStyles.darkHeadingSmall
+                    //           : AppTextStyles.headingSmall,
+                    //     );
+                    //   },
+                    // ),
                     const SizedBox(height: 12),
                     if (user.currentProjects.isEmpty)
                       Builder(

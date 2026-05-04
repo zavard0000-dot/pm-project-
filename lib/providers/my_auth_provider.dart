@@ -16,6 +16,7 @@ class MyAuthProvider extends ChangeNotifier {
 
   // Список объявлений для feed
   List<Announcement> _announcements = [];
+  List<Announcement> _myAnnouncements = [];
   bool _isLoadingAnnouncements = false;
 
   // Избранные объявления
@@ -41,9 +42,12 @@ class MyAuthProvider extends ChangeNotifier {
           _status = AuthStatus.authenticated;
           // Загружаем избранные объявления при входе пользователя
           _loadFavorites(user.uid);
+          // Загружаем свои объявления
+          loadMyAnnouncements();
         } else {
           _status = AuthStatus.unauthenticated;
           _favoriteAnnouncementIds = [];
+          _myAnnouncements = [];
         }
 
         _error = null;
@@ -73,6 +77,28 @@ class MyAuthProvider extends ChangeNotifier {
     }
   }
 
+  // Загрузить свои объявления
+  Future<void> loadMyAnnouncements() async {
+    if (_user == null) {
+      print('[MyAuthProvider] Cannot load my announcements - user is null');
+      return;
+    }
+    try {
+      print('[MyAuthProvider] Loading my announcements for user: ${_user!.uid}');
+      _myAnnouncements = await _authService.getAnnouncements(
+        userId: _user!.uid,
+        limit: 50,
+      );
+      notifyListeners();
+      print(
+        '[MyAuthProvider] Loaded ${_myAnnouncements.length} my announcements',
+      );
+    } catch (e) {
+      print('[MyAuthProvider] Error loading my announcements: $e');
+      rethrow;
+    }
+  }
+
   // Загрузить пользователя по ID (для просмотра профиля другого пользователя)
   Future<MyUser?> loadUserById({required String userId}) async {
     try {
@@ -97,6 +123,7 @@ class MyAuthProvider extends ChangeNotifier {
 
   // Геттеры для объявлений
   List<Announcement> get announcements => _announcements;
+  List<Announcement> get myAnnouncements => _myAnnouncements;
   bool get isLoadingAnnouncements => _isLoadingAnnouncements;
   bool get hasAnnouncements => _announcements.isNotEmpty;
 
@@ -343,12 +370,58 @@ class MyAuthProvider extends ChangeNotifier {
 
       await _authService.saveAnnouncement(announcement: announcement);
 
+      // Обновляем оба списка
+      await loadAnnouncements();
+      await loadMyAnnouncements();
+
       // _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
     } catch (e) {
       _error = _parseError(e.toString());
       // _status = AuthStatus.authenticated;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Update Announcement
+  Future<bool> updateAnnouncement(Announcement announcement) async {
+    try {
+      _error = null;
+      notifyListeners();
+
+      await _authService.updateAnnouncement(announcement: announcement);
+
+      // Обновляем оба списка
+      await loadAnnouncements();
+      await loadMyAnnouncements();
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = _parseError(e.toString());
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Delete Announcement
+  Future<bool> deleteAnnouncement(String id) async {
+    try {
+      _error = null;
+      notifyListeners();
+
+      await _authService.deleteAnnouncement(id: id);
+
+      // Обновляем оба списка
+      await loadAnnouncements();
+      await loadMyAnnouncements();
+
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = _parseError(e.toString());
       notifyListeners();
       return false;
     }

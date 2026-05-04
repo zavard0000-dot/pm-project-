@@ -8,32 +8,39 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.isLoading = false,
+    this.color,
+    this.textColor,
   });
   final String text;
   final VoidCallback? onPressed;
   final IconData? icon;
   final bool isLoading;
+  final Color? color;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
     final isEnabled = onPressed != null && !isLoading;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       height: 54,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isEnabled
-              ? const [AppColors.primaryBlue, AppColors.primaryPurple]
-              : [
-                  AppColors.disabledGrey.withOpacity(0.5),
-                  AppColors.disabledGrey.withOpacity(0.5),
-                ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
+        color: !isEnabled
+            ? (isDarkMode
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.disabledGrey.withOpacity(0.2))
+            : color,
+        gradient: (isEnabled && color == null)
+            ? const LinearGradient(
+                colors: [AppColors.primaryBlue, AppColors.primaryPurple],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )
+            : null,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: isEnabled
+        boxShadow: (isEnabled && color == null)
             ? [
                 BoxShadow(
                   color: AppColors.primaryBlue.withOpacity(0.3),
@@ -57,14 +64,17 @@ class PrimaryButton extends StatelessWidget {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      textColor ?? Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
               ] else if (icon != null) ...[
                 Icon(
                   icon,
-                  color: isEnabled ? Colors.white : Colors.white60,
+                  color:
+                      textColor ?? (isEnabled ? Colors.white : Colors.white60),
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -72,7 +82,8 @@ class PrimaryButton extends StatelessWidget {
               Text(
                 isLoading ? "Saving..." : text,
                 style: AppTextStyles.button.copyWith(
-                  color: isEnabled ? Colors.white : Colors.white60,
+                  color:
+                      textColor ?? (isEnabled ? Colors.white : Colors.white60),
                 ),
               ),
             ],

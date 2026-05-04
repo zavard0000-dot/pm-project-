@@ -387,42 +387,39 @@ class AuthService implements AuthInterface {
     List<String> eventTypes = const [],
     String searchQuery = '',
     String? excludeUserId,
+    String? userId,
     int limit = 30,
   }) async {
     try {
       print('[AuthService] Fetching announcements');
-      Talker().debug(types.toString());
-      print(
-        '[AuthService] Filters - Types: $types, Skills: $skills, Events: $eventTypes, Search: "$searchQuery", ExcludeUserId: $excludeUserId',
-      );
+      if (userId == null) {
+        Talker().debug(types.toString());
+        print(
+          '[AuthService] Filters - Types: $types, Skills: $skills, Events: $eventTypes, Search: "$searchQuery", ExcludeUserId: $excludeUserId',
+        );
 
-      // Если типы пусты - не показываем ничего
-      if (types.isEmpty) {
-        print('[AuthService] Types is empty, returning empty list');
-        return [];
+        // Если типы пусты - не показываем ничего
+        if (types.isEmpty) {
+          print('[AuthService] Types is empty, returning empty list');
+          return [];
+        }
+      } else {
+        print(
+          '[AuthService] Fetching announcements for specific user: $userId',
+        );
       }
 
       Query<Map<String, dynamic>> query = firestore.collection('announcements');
 
-      // ⚠️ ВАЖНО: НЕ применяем where('type') потому что в комбинации с orderBy('createdAt')
-      // требуется составной индекс. Вместо этого фильтруем на клиенте.
-      // This avoids requiring a composite index for where('type') + orderBy('createdAt')
+      // ⚠️ ВАЖНО: Мы убираем where('userId') из запроса к БД, чтобы не требовать создания индекса.
+      // Вместо этого мы будем фильтровать по userId на клиенте, так же как мы делаем для типов.
 
-      // Фильтр по skills - не применяем для оптимизации (требует индекса)
-      // if (skills.isNotEmpty) {
-      //   query = query.where('requiredSkills', arrayContainsAny: skills);
-      // }
-
-      // Фильтр по типу события - не применяем для оптимизации (требует индекса)
-      // if (eventTypes.isNotEmpty) {
-      //   query = query.where('eventType', whereIn: eventTypes);
-      // }
-
-      // Сортируем по новым (самые свежие первыми) - БЕЗ where фильтров
+      // Сортируем по новым (самые свежие первыми)
       query = query.orderBy('createdAt', descending: true);
 
-      // Лимит 30 объявлений
-      query = query.limit(limit);
+      // Если мы загружаем "свои" объявления, берем чуть больше документов для фильтрации
+      final effectiveLimit = userId != null ? 100 : limit;
+      query = query.limit(effectiveLimit);
 
       final snapshot = await query.get();
 
@@ -434,7 +431,13 @@ class AuthService implements AuthInterface {
         return Announcement.fromJson(doc.data(), doc.id);
       }).toList();
 
-      // Исключаем объявления текущего пользователя
+      // Фильтруем по конкретному пользователю на клиенте
+      if (userId != null) {
+        print('[AuthService] Client-side filtering for userId: $userId');
+        announcements = announcements.where((a) => a.userId == userId).toList();
+      }
+
+      // Исключаем объявления текущего пользователя (для ленты)
       if (excludeUserId != null) {
         print(
           '[AuthService] Excluding announcements from user: $excludeUserId',
@@ -490,6 +493,47 @@ class AuthService implements AuthInterface {
     } catch (e) {
       print('[AuthService] Error fetching announcements: $e');
       return [];
+    }
+  }
+
+  // Обновить объявление
+  Future<void> updateAnnouncement({required Announcement announcement}) async {
+    try {
+      if (announcement.id == null) {
+        throw Exception('Announcement ID is required for update');
+      }
+
+      print('[AuthService] Updating announcement: ${announcement.id}');
+
+      await firestore.collection('announcements').doc(announcement.id).update({
+        ...announcement.toJson(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      print('[AuthService] Announcement updated successfully');
+    } on FirebaseException catch (e) {
+      print('[AuthService] Firebase error in updateAnnouncement: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('[AuthService] Error in updateAnnouncement: $e');
+      rethrow;
+    }
+  }
+
+  // Удалить объявление
+  Future<void> deleteAnnouncement({required String id}) async {
+    try {
+      print('[AuthService] Deleting announcement: $id');
+
+      await firestore.collection('announcements').doc(id).delete();
+
+      print('[AuthService] Announcement deleted successfully');
+    } on FirebaseException catch (e) {
+      print('[AuthService] Firebase error in deleteAnnouncement: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('[AuthService] Error in deleteAnnouncement: $e');
+      rethrow;
     }
   }
 }

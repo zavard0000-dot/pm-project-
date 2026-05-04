@@ -9,7 +9,9 @@ import 'package:teamup/providers/my_auth_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class CreateTabScreen extends StatefulWidget {
-  const CreateTabScreen({super.key});
+  final Announcement? announcementToEdit;
+
+  const CreateTabScreen({super.key, this.announcementToEdit});
 
   @override
   State<CreateTabScreen> createState() => _CreateTabScreenState();
@@ -17,11 +19,10 @@ class CreateTabScreen extends StatefulWidget {
 
 class _CreateTabScreenState extends State<CreateTabScreen> {
   // Controllers
-  final TextEditingController _adTitleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _eventLocationController =
-      TextEditingController();
-  final TextEditingController _teamSizeController = TextEditingController();
+  late TextEditingController _adTitleController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _eventLocationController;
+  late TextEditingController _teamSizeController;
 
   // Selected values
   String? _selectedAdType;
@@ -34,6 +35,34 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
   DateTime? _eventDateEnd;
 
   bool _isLoading = false;
+
+  bool get _isEditing => widget.announcementToEdit != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _adTitleController = TextEditingController(
+      text: widget.announcementToEdit?.title ?? '',
+    );
+    _descriptionController = TextEditingController(
+      text: widget.announcementToEdit?.description ?? '',
+    );
+    _eventLocationController = TextEditingController(
+      text: widget.announcementToEdit?.eventLocation ?? '',
+    );
+    _teamSizeController = TextEditingController(
+      text: widget.announcementToEdit?.requiredTeamSize?.toString() ?? '',
+    );
+
+    if (_isEditing) {
+      _selectedAdType = widget.announcementToEdit!.type;
+      _selectedUniversity = widget.announcementToEdit!.university;
+      _selectedEventType = widget.announcementToEdit!.eventType;
+      _selectedSkills = List.from(widget.announcementToEdit!.requiredSkills);
+      _eventDateStart = widget.announcementToEdit!.eventDateStart;
+      _eventDateEnd = widget.announcementToEdit!.eventDateEnd;
+    }
+  }
 
   bool _isFormValid() {
     return _selectedAdType != null &&
@@ -65,7 +94,7 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
     }
   }
 
-  void _createAnnouncement() async {
+  void _saveOrUpdateAnnouncement() async {
     if (!_isFormValid()) return;
 
     FocusScope.of(context).unfocus();
@@ -91,6 +120,7 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
       }
 
       final announcement = Announcement(
+        id: widget.announcementToEdit?.id,
         type: _selectedAdType!,
         title: _adTitleController.text,
         description: _descriptionController.text,
@@ -114,32 +144,36 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
         userUniversity: currentUser.universityName,
       );
 
-      await authProvider.saveAnnouncement(announcement);
+      bool success;
+      if (_isEditing) {
+        success = await authProvider.updateAnnouncement(announcement);
+      } else {
+        success = await authProvider.saveAnnouncement(announcement);
+      }
 
-      Talker().debug("""{
-      adType = ${announcement.type},
-      title = ${announcement.title},
-      desc = ${announcement.description},
-      university = ${announcement.university},
-      event = ${announcement.eventType},
-      skills = ${announcement.requiredSkills.join(', ')},
-      telegram = ${announcement.telegramLink},
-      location = ${announcement.eventLocation},
-      teamSize = ${announcement.requiredTeamSize}
-      }""");
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _isEditing
+                  ? 'Announcement updated successfully!'
+                  : 'Announcement created successfully!',
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
 
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Announcement created successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+        // Обновляем список своих объявлений
+        await authProvider.loadMyAnnouncements();
 
-      // Reset form
-      _resetForm();
+        if (_isEditing) {
+          Navigator.of(context).pop();
+        } else {
+          _resetForm();
+        }
+      }
     } catch (e) {
-      print('Error creating announcement: $e');
+      print('Error saving announcement: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
@@ -147,9 +181,74 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
         ),
       );
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _deleteAnnouncement() async {
+    if (!_isEditing) return;
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Announcement'),
+        content: const Text(
+          'Are you sure you want to delete this announcement?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final authProvider = context.read<MyAuthProvider>();
+      final success = await authProvider.deleteAnnouncement(
+        widget.announcementToEdit!.id!,
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Announcement deleted successfully!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        // Обновляем список своих объявлений
+        await authProvider.loadMyAnnouncements();
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      print('Error deleting announcement: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -181,17 +280,22 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        // Header
-        Header(),
+    return Scaffold(
+      backgroundColor: isDarkMode
+          ? AppColors.darkBackground
+          : AppColors.background,
+      body: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          // Header
+          Header(
+            title: _isEditing ? "Edit Announcement" : "Create Announcement",
+            showBackButton: _isEditing,
+          ),
 
-        const SizedBox(height: 32),
+          const SizedBox(height: 32),
 
-        Container(
-          color: isDarkMode ? AppColors.darkBackground : AppColors.background,
-          child: Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,22 +396,42 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
 
                 const SizedBox(height: 16),
 
-                // Create Button
-                PrimaryButton(
-                  text: "Create announcement",
-                  icon: Icons.star_border,
-                  isLoading: _isLoading,
-                  onPressed: (_isFormValid() && !_isLoading)
-                      ? _createAnnouncement
-                      : null,
-                ),
+                // Action Buttons
+                if (_isEditing) ...[
+                  PrimaryButton(
+                    text: "Save changes",
+                    icon: Icons.check,
+                    isLoading: _isLoading,
+                    onPressed: (_isFormValid() && !_isLoading)
+                        ? _saveOrUpdateAnnouncement
+                        : null,
+                  ),
+                  const SizedBox(height: 12),
+                  PrimaryButton(
+                    text: "Delete announcement",
+                    icon: Icons.delete_outline,
+                    isLoading: _isLoading,
+                    color: Colors.red.withValues(alpha: 0.1),
+                    textColor: Colors.red,
+                    onPressed: _isLoading ? null : _deleteAnnouncement,
+                  ),
+                ] else ...[
+                  PrimaryButton(
+                    text: "Create announcement",
+                    icon: Icons.star_border,
+                    isLoading: _isLoading,
+                    onPressed: (_isFormValid() && !_isLoading)
+                        ? _saveOrUpdateAnnouncement
+                        : null,
+                  ),
+                ],
 
-                const SizedBox(height: 70),
+                const SizedBox(height: 80),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
