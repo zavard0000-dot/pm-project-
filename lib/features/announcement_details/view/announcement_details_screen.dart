@@ -64,28 +64,39 @@ class AnnouncementDetailsScreen extends StatelessWidget {
               child: SafeArea(
                 bottom: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      roundIconBtn(
-                        icon: Icons.arrow_back,
-                        onPressed: () => context.pop(),
+                      Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          roundIconBtn(
+                            icon: Icons.arrow_back,
+                            onPressed: () => context.pop(),
+                          ),
+                          Center(
+                            child: Text(
+                              'Announcement Details',
+                              style: AppTextStyles.appBarTitle,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 24),
                       Text(
                         announcement!.title,
                         style: AppTextStyles.whiteHeadingLarge.copyWith(
                           height: 1.3,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        announcement!.description,
-                        style: AppTextStyles.whiteCaption.copyWith(height: 1.4),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      // const SizedBox(height: 12),
+                      // Text(
+                      //   announcement!.description,
+                      //   style: AppTextStyles.whiteCaption.copyWith(height: 1.4),
+                      //   maxLines: 3,
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
                     ],
                   ),
                 ),

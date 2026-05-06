@@ -55,7 +55,8 @@ class EditProfileHeader extends StatelessWidget {
                         color: Colors.white,
                       ),
                       SizedBox(width: 48),
-                      Icon(Icons.star_outline_sharp, color: Colors.white),
+                      // Icon(Icons.star_outline_sharp, color: Colors.white),
+                      SizedBox(width: 20),
                       Text(
                         " Edit Profile",
                         style: AppTextStyles.whiteHeadingLarge,
@@ -67,10 +68,10 @@ class EditProfileHeader extends StatelessWidget {
 
                   UserAvatar(username: 'User', avatarLink: null, radius: 60),
                   SizedBox(height: 8),
-                  Text(
-                    "нажми для редактирование профеля",
-                    style: AppTextStyles.whiteCaption,
-                  ),
+                  // Text(
+                  //   "нажми для редактирование профеля",
+                  //   style: AppTextStyles.whiteCaption,
+                  // ),
                 ],
               ),
             ),

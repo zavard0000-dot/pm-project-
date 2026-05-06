@@ -18,11 +18,11 @@ class AvailabilityCard extends StatefulWidget {
 class _AvailabilityCardState extends State<AvailabilityCard> {
   final List<Map<String, String>> options = [
     {
-      "title": "Доступна для проектов",
-      "subtitle": "Готова к новым возможностям",
+      "title": "Available for projects",
+      "subtitle": "Ready for new opportunities",
     },
-    {"title": "Частично доступна", "subtitle": "Могу взять небольшой проект"},
-    {"title": "Недоступна", "subtitle": "Сейчас занята другими проектами"},
+    {"title": "Partially available", "subtitle": "Can take on a small project"},
+    {"title": "Unavailable", "subtitle": "Currently busy with other projects"},
   ];
 
   @override
@@ -43,7 +43,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "🎯 доступность",
+            "🎯 Availability",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,

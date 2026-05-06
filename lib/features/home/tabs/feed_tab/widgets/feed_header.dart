@@ -40,7 +40,7 @@ class _FeedHeaderState extends State<FeedHeader> {
     return Consumer<MyAuthProvider>(
       builder: (context, authProvider, _) {
         return SliverAppBar(
-          expandedHeight: 250.0,
+          expandedHeight: 240.0,
           floating: false,
           pinned: true,
           automaticallyImplyLeading: false,
@@ -71,18 +71,18 @@ class _FeedHeaderState extends State<FeedHeader> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: CircleAvatar(
-                          backgroundColor: isDarkMode
-                              ? AppColors.darkInputBorder
-                              : Colors.white24,
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(top: 8),
+                      //   child: CircleAvatar(
+                      //     backgroundColor: isDarkMode
+                      //         ? AppColors.darkInputBorder
+                      //         : Colors.white24,
+                      //     child: Icon(
+                      //       Icons.favorite_border,
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

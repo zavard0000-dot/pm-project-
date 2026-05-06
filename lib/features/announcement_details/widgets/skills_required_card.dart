@@ -20,7 +20,7 @@ class SkillsRequiredCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '💼 Требуемые навыки и технологии',
+            '💼 Required skills and technologies',
             style: AppTextStyles.headingMedium.copyWith(
               color: isDarkMode
                   ? AppColors.darkTextPrimary

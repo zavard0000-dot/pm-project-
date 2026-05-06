@@ -10,20 +10,20 @@ class AuthorCard extends StatelessWidget {
   const AuthorCard({required this.announcement, this.onTap});
 
   String _getTimeAgo(DateTime? date) {
-    if (date == null) return 'давно';
+    if (date == null) return 'while ago';
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inSeconds < 60) {
-      return 'только что';
+      return 'just now';
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}м назад';
+      return '${difference.inMinutes}m ago';
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}ч назад';
+      return '${difference.inHours}h ago';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}д назад';
+      return '${difference.inDays}d ago';
     } else {
-      return '${difference.inDays ~/ 7}н назад';
+      return '${difference.inDays ~/ 7}w ago';
     }
   }
 
@@ -47,7 +47,7 @@ class AuthorCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    announcement.userName ?? 'Неизвестный пользователь',
+                    announcement.userName ?? 'Unknown user',
                     style: AppTextStyles.headingMedium.copyWith(
                       color: isDarkMode
                           ? AppColors.darkTextPrimary
@@ -59,7 +59,7 @@ class AuthorCard extends StatelessWidget {
                       announcement.userCourse != null)
                     Text(
                       '${announcement.userUniversity ?? ''}'
-                      '${announcement.userCourse != null ? ', ${announcement.userCourse} курс' : ''}',
+                      '${announcement.userCourse != null ? ', ${announcement.userCourse} year' : ''}',
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: isDarkMode
                             ? AppColors.darkTextSecondary
@@ -68,7 +68,7 @@ class AuthorCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 2),
                   Text(
-                    'опубликовано ${_getTimeAgo(announcement.createdAt)}',
+                    'posted ${_getTimeAgo(announcement.createdAt)}',
                     style: AppTextStyles.captionMedium.copyWith(
                       color: isDarkMode
                           ? AppColors.darkTextSecondary

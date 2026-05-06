@@ -17,7 +17,7 @@ class DescriptionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Полное описание',
+            'Full description',
             style: AppTextStyles.headingMedium.copyWith(
               color: isDarkMode
                   ? AppColors.darkTextPrimary
@@ -58,7 +58,7 @@ class DescriptionCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Университет: ${announcement.university}',
+                      'University: ${announcement.university}',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: isDarkMode
                             ? AppColors.darkTextSecondary
@@ -93,7 +93,7 @@ class DescriptionCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Тип события: ${announcement.eventType}',
+                      'Event type: ${announcement.eventType}',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: isDarkMode
                             ? AppColors.darkTextSecondary
@@ -128,7 +128,7 @@ class DescriptionCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Требуемый размер команды: ${announcement.requiredTeamSize} человек',
+                      'Team size required: ${announcement.requiredTeamSize} people',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: isDarkMode
                             ? AppColors.darkTextSecondary

@@ -47,14 +47,23 @@ class _NotificationsTabScreenState extends State<NotificationsTabScreen> {
         child: Column(
           children: [
             AppBar(
-              title: const Text(
+              title: Text(
                 'Notifications',
-                style: AppTextStyles.appBarTitle,
+                style: AppTextStyles.appBarTitle.copyWith(
+                  color: isDarkMode
+                      ? AppColors.darkTextPrimary
+                      : AppColors.textPrimary,
+                ),
               ),
               actions: [
                 if (_notifications.isNotEmpty)
                   IconButton(
-                    icon: const Icon(Icons.delete_sweep_outlined),
+                    icon: Icon(
+                      Icons.delete_sweep_outlined,
+                      color: isDarkMode
+                          ? AppColors.darkTextPrimary
+                          : AppColors.textPrimary,
+                    ),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -134,29 +143,46 @@ class _NotificationsTabScreenState extends State<NotificationsTabScreen> {
                                             Expanded(
                                               child: Text(
                                                 item.title,
-                                                style: AppTextStyles.labelLarge,
+                                                style:
+                                                    (isDarkMode
+                                                            ? AppTextStyles
+                                                                  .darkBodyLarge
+                                                            : AppTextStyles
+                                                                  .bodyLarge)
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                               ),
                                             ),
                                             Text(
                                               _formatTime(item.timestamp),
-                                              style: AppTextStyles.bodySmall
-                                                  .copyWith(
-                                                    color:
-                                                        AppColors.textSecondary,
-                                                  ),
+                                              style:
+                                                  (isDarkMode
+                                                          ? AppTextStyles
+                                                                .darkCaptionMedium
+                                                          : AppTextStyles
+                                                                .captionMedium)
+                                                      .copyWith(
+                                                        color: isDarkMode
+                                                            ? AppColors
+                                                                  .darkTextSecondary
+                                                            : AppColors
+                                                                  .textSecondary,
+                                                      ),
                                             ),
                                           ],
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           item.body,
-                                          style: AppTextStyles.bodySmall
-                                              .copyWith(
-                                                color: isDarkMode
-                                                    ? AppColors
-                                                          .darkTextSecondary
-                                                    : AppColors.textSecondary,
-                                              ),
+                                          style: isDarkMode
+                                              ? AppTextStyles.darkBodyMedium
+                                              : AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      color: AppColors
+                                                          .textSecondary,
+                                                    ),
                                         ),
                                       ],
                                     ),
@@ -176,6 +202,7 @@ class _NotificationsTabScreenState extends State<NotificationsTabScreen> {
   }
 
   Widget _buildEmptyState() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -188,17 +215,21 @@ class _NotificationsTabScreenState extends State<NotificationsTabScreen> {
           const SizedBox(height: 16),
           Text(
             'No notifications yet',
-            style: AppTextStyles.headingMedium.copyWith(
-              color: AppColors.primaryPurple.withValues(alpha: 0.5),
-            ),
+            style:
+                (isDarkMode
+                        ? AppTextStyles.darkHeadingSmall
+                        : AppTextStyles.headingSmall)
+                    .copyWith(
+                      color: AppColors.primaryPurple.withValues(alpha: 0.7),
+                    ),
           ),
           const SizedBox(height: 8),
           Text(
             'Recent updates and reminders\nwill appear here.',
             textAlign: TextAlign.center,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: isDarkMode
+                ? AppTextStyles.darkCaptionMedium
+                : AppTextStyles.captionMedium,
           ),
         ],
       ),

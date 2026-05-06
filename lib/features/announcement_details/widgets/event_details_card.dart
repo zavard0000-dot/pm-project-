@@ -51,10 +51,10 @@ class EventDetailsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('⚡', style: TextStyle(fontSize: 18)),
+              Text('?', style: TextStyle(fontSize: 18)),
               const SizedBox(width: 8),
               Text(
-                'Детали события',
+                'Event details',
                 style: AppTextStyles.headingMedium.copyWith(
                   color: isDarkMode
                       ? AppColors.darkTextPrimary
@@ -77,7 +77,7 @@ class EventDetailsCard extends StatelessWidget {
                 _DetailTile(
                   icon: Icons.calendar_today,
                   iconColor: AppColors.primaryBlue,
-                  label: 'Дата',
+                  label: 'Date',
                   value: _formatDateRange(),
                   isDarkMode: isDarkMode,
                 ),
@@ -86,7 +86,7 @@ class EventDetailsCard extends StatelessWidget {
                 _DetailTile(
                   icon: Icons.location_on_outlined,
                   iconColor: Colors.red,
-                  label: 'Место',
+                  label: 'Location',
                   value: announcement.eventLocation!,
                   isDarkMode: isDarkMode,
                 ),
@@ -94,7 +94,7 @@ class EventDetailsCard extends StatelessWidget {
                 _DetailTile(
                   icon: Icons.bookmark_outline,
                   iconColor: Colors.orange,
-                  label: 'Формат',
+                  label: 'Format',
                   value: announcement.eventType,
                   isDarkMode: isDarkMode,
                 ),
@@ -102,8 +102,8 @@ class EventDetailsCard extends StatelessWidget {
                 _DetailTile(
                   icon: Icons.groups_2_outlined,
                   iconColor: AppColors.primaryPurple,
-                  label: 'Команда',
-                  value: '${announcement.requiredTeamSize} человек',
+                  label: 'Team size',
+                  value: '${announcement.requiredTeamSize} people����',
                   isDarkMode: isDarkMode,
                 ),
             ],

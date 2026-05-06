@@ -23,7 +23,7 @@ class LocationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '📍 Location',
+                  'Location',
                   style: isDarkMode
                       ? AppTextStyles.darkHeadingSmall
                       : AppTextStyles.headingSmall,
