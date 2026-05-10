@@ -51,8 +51,8 @@ class EventDetailsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('?', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
+              // Text('?', style: TextStyle(fontSize: 18)),
+              // const SizedBox(width: 8),
               Text(
                 'Event details',
                 style: AppTextStyles.headingMedium.copyWith(
@@ -103,7 +103,7 @@ class EventDetailsCard extends StatelessWidget {
                   icon: Icons.groups_2_outlined,
                   iconColor: AppColors.primaryPurple,
                   label: 'Team size',
-                  value: '${announcement.requiredTeamSize} people����',
+                  value: '${announcement.requiredTeamSize} people',
                   isDarkMode: isDarkMode,
                 ),
             ],
@@ -141,8 +141,9 @@ class _DetailTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: 8),
           Row(
             children: [
               Icon(icon, size: 18, color: iconColor),
