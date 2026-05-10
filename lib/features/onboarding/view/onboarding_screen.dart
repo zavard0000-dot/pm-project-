@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teamup/router.dart';
+import 'package:teamup/theme.dart';
 
 class OnboardingPage {
   final String title;
@@ -71,7 +72,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode
+        ? AppColors.darkBackground
+        : AppColors.background;
+    final textColor = isDarkMode
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final dotInactiveColor = isDarkMode
+        ? AppColors.darkSurfaceVariant
+        : Colors.grey.shade300;
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Stack(
         children: [
           PageView(
@@ -81,7 +94,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _currentIndex = index;
               });
             },
-            children: pages.map((page) => _buildPage(page)).toList(),
+            children: pages
+                .map((page) => _buildPage(page, isDarkMode))
+                .toList(),
           ),
           // Skip button
           Positioned(
@@ -92,7 +107,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPressed: () {
                   context.go('/login');
                 },
-                child: const Text('Skip'),
+                child: Text(
+                  'Skip',
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
               ),
             ),
           ),
@@ -118,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           shape: BoxShape.circle,
                           color: _currentIndex == index
                               ? pages[index].color
-                              : Colors.grey.shade300,
+                              : dotInactiveColor,
                         ),
                       ),
                     ),
@@ -164,9 +184,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildPage(OnboardingPage page) {
+  Widget _buildPage(OnboardingPage page, bool isDarkMode) {
+    final backgroundColor = isDarkMode
+        ? AppColors.darkBackground
+        : Colors.white;
+    final titleColor = isDarkMode
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final descriptionColor = isDarkMode
+        ? AppColors.darkTextSecondary
+        : Colors.grey.shade600;
+
     return Container(
-      color: Colors.white,
+      color: backgroundColor,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -188,9 +218,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Text(
               page.title,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: titleColor,
+              ),
             ),
             const SizedBox(height: 16),
             // Description
@@ -199,9 +231,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Text(
                 page.description,
                 textAlign: TextAlign.center,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: descriptionColor,
+                ),
               ),
             ),
           ],
