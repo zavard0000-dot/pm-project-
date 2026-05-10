@@ -8,6 +8,10 @@ import 'package:teamup/features/home/home.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
 import '../widgets/widgets.dart';
 
+void _hideKeyboard(BuildContext context) {
+  FocusScope.of(context).unfocus();
+}
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
@@ -38,7 +42,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDarkMode
+          ? AppColors.darkBackground
+          : AppColors.background,
       body: Stack(
         children: [
           Container(
@@ -81,9 +90,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(24),
-                    decoration: const BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? AppColors.darkSurface
+                          : AppColors.surface,
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(32),
                         topRight: Radius.circular(32),
                       ),
@@ -199,14 +210,14 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {
-              context.go(AppRoutes.login);
-            },
-            icon: const Icon(Icons.abc),
-            color: Colors.white,
-            iconSize: 32,
-            padding: const EdgeInsets.only(top: 40),
+          Padding(
+            padding: EdgeInsets.only(left: 16, top: 24),
+            child: SafeArea(
+              child: roundIconBtn(
+                icon: Icons.arrow_back,
+                onPressed: () => context.go(AppRoutes.login),
+              ),
+            ),
           ),
         ],
       ),
@@ -265,9 +276,43 @@ class _SignupScreenState extends State<SignupScreen> {
       // Show Firebase error
       final errorMessage = authProvider.error ?? "Sign up failed";
       print('[SignupScreen] Registration failed: $errorMessage');
+
+      // Скрываем клавиатуру
+      _hideKeyboard(context);
+
+      // Показываем ошибку в UI
       setState(() {
         _signupErrors["firebase"] = errorMessage;
       });
+
+      // Если email уже в use, показываем также snackbar
+      if (errorMessage.contains('already in use')) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+            print('[SignupScreen] Showing snackbar for duplicate email');
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text(
+                  'This email is already in use. Please try another email.',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                // backgroundColor: isDarkMode
+                //     ? AppColors.primaryBlue
+                //     : AppColors.primaryPurple,
+                backgroundColor: AppColors.errorRed,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: const EdgeInsets.all(16),
+              ),
+            );
+          }
+        });
+      }
     }
   }
 

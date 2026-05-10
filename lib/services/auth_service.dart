@@ -388,7 +388,7 @@ class AuthService implements AuthInterface {
     String searchQuery = '',
     String? excludeUserId,
     String? userId,
-    int limit = 30,
+    int limit = 200,
   }) async {
     try {
       print('[AuthService] Fetching announcements');
@@ -435,16 +435,6 @@ class AuthService implements AuthInterface {
       if (userId != null) {
         print('[AuthService] Client-side filtering for userId: $userId');
         announcements = announcements.where((a) => a.userId == userId).toList();
-      }
-
-      // Исключаем объявления текущего пользователя (для ленты)
-      if (excludeUserId != null) {
-        print(
-          '[AuthService] Excluding announcements from user: $excludeUserId',
-        );
-        announcements = announcements
-            .where((a) => a.userId != excludeUserId)
-            .toList();
       }
 
       // Фильтрация на клиенте по типам (person, project, team)

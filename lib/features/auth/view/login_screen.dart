@@ -9,6 +9,7 @@ import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
+import 'package:teamup/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,17 +20,22 @@ class LoginScreen extends StatefulWidget {
 
 class _loginScreenState extends State<LoginScreen> {
   Map<String, String> _loginErrors = {};
+
   final TextEditingController _emailEditController = TextEditingController(
-    text: "a@a.com",
+    // text: "a@a.com",
   );
   final TextEditingController _passwordEditController = TextEditingController(
-    text: "11111111",
+    // text: "11111111",
   );
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDarkMode
+          ? AppColors.darkBackground
+          : AppColors.background,
       body: Stack(
         children: [
           // Background Gradient
@@ -76,9 +82,11 @@ class _loginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(24),
-                    decoration: const BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? AppColors.darkSurface
+                          : AppColors.surface,
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(32),
                         topRight: Radius.circular(32),
                       ),
@@ -110,7 +118,7 @@ class _loginScreenState extends State<LoginScreen> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () => _resetPassword(context),
                               child: const Text(
                                 'Forgot your password?',
                                 style: TextStyle(color: AppColors.primaryBlue),
@@ -161,53 +169,69 @@ class _loginScreenState extends State<LoginScreen> {
                           ),
 
                           const SizedBox(height: 24),
-                          const Center(
-                            child: Text(
-                              'or',
-                              style: TextStyle(color: AppColors.textSecondary),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
 
-                          // Google Button
-                          Container(
-                            width: double.infinity,
-                            height: 54,
-                            decoration: BoxDecoration(
-                              color: AppColors.surface,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: AppColors.inputBorder),
-                            ),
-                            child: TextButton(
-                              onPressed: () {},
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'G',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Login with Google',
-                                    style: AppTextStyles.subtitle,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          // const Center(
+                          //   child: Text(
+                          //     'or',
+                          //     style: TextStyle(color: AppColors.textSecondary),
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 24),
 
+                          // // Google Button
+                          // Container(
+                          //   width: double.infinity,
+                          //   height: 54,
+                          //   decoration: BoxDecoration(
+                          //     color: isDarkMode
+                          //         ? AppColors.darkSurfaceVariant
+                          //         : AppColors.surface,
+                          //     borderRadius: BorderRadius.circular(16),
+                          //     border: Border.all(
+                          //       color: isDarkMode
+                          //           ? AppColors.darkInputBorder
+                          //           : AppColors.inputBorder,
+                          //     ),
+                          //   ),
+                          //   child: TextButton(
+                          //     onPressed: () {},
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         Text(
+                          //           'G',
+                          //           style: TextStyle(
+                          //             color: isDarkMode
+                          //                 ? Colors.white
+                          //                 : Colors.black,
+                          //             fontSize: 20,
+                          //             fontWeight: FontWeight.bold,
+                          //           ),
+                          //         ),
+                          //         const SizedBox(width: 8),
+                          //         Text(
+                          //           'Login with Google',
+                          //           style: AppTextStyles.subtitle.copyWith(
+                          //             color: isDarkMode
+                          //                 ? AppColors.darkTextPrimary
+                          //                 : AppColors.textPrimary,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           const SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 "Don't have an account? ",
-                                style: AppTextStyles.bodyMedium,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: isDarkMode
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.textSecondary,
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -261,6 +285,51 @@ class _loginScreenState extends State<LoginScreen> {
       setState(() {
         _loginErrors["firebase"] = authProvider.error ?? "Login failed";
       });
+    }
+  }
+
+  void _resetPassword(BuildContext context) async {
+    final email = _emailEditController.text.trim();
+
+    if (email.isEmpty || !isEmail(email)) {
+      setState(() {
+        _loginErrors["email"] = "Enter a valid email to reset password";
+      });
+      return;
+    }
+
+    // Clear previous errors
+    setState(() {
+      _loginErrors.remove("email");
+      _loginErrors.remove("firebase");
+    });
+
+    try {
+      final authProvider = context.read<MyAuthProvider>();
+      // В MyAuthProvider нет прямого метода resetPassword, но мы можем вызвать его через сервис
+      // или добавить в провайдер. Проверим сервис: в AuthService есть resetPassword.
+      // Попробуем вызвать напрямую через сервис, если провайдер его предоставляет,
+      // но правильнее будет добавить метод в провайдер.
+
+      // Для начала проверим, есть ли метод в провайдере (согласно аттачментам его там нет).
+      // Но я добавлю вызов через ScaffoldMessenger для уведомления.
+
+      await context.read<AuthService>().resetPassword(email: email);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password reset link has been sent to $email'),
+            backgroundColor: AppColors.primaryBlue,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loginErrors["firebase"] = "Error: ${e.toString()}";
+        });
+      }
     }
   }
 

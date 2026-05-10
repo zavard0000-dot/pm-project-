@@ -84,7 +84,9 @@ class MyAuthProvider extends ChangeNotifier {
       return;
     }
     try {
-      print('[MyAuthProvider] Loading my announcements for user: ${_user!.uid}');
+      print(
+        '[MyAuthProvider] Loading my announcements for user: ${_user!.uid}',
+      );
       _myAnnouncements = await _authService.getAnnouncements(
         userId: _user!.uid,
         limit: 50,
@@ -159,8 +161,8 @@ class MyAuthProvider extends ChangeNotifier {
         skills: skills ?? selectedSkills,
         eventTypes: eventTypes ?? selectedEventTypes,
         searchQuery: _searchQuery,
-        excludeUserId: _user?.uid,
-        limit: 30,
+        excludeUserId: null,
+        limit: 200,
       );
 
       // Сохраняем фильтры если они переданы

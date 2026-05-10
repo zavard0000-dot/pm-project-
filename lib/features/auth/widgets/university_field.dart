@@ -23,10 +23,19 @@ class UniversityField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('University', style: AppTextStyles.labelLarge),
+        Text(
+          'University',
+          style: AppTextStyles.labelLarge.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextPrimary
+                : AppColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           margin: EdgeInsets.only(bottom: error != null ? 6 : 24),
