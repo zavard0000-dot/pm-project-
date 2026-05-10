@@ -9,7 +9,6 @@ import 'package:teamup/theme.dart';
 import 'package:teamup/widgets/widgets.dart';
 import 'package:teamup/features/home/home.dart';
 import 'package:teamup/providers/my_auth_provider.dart';
-import 'package:teamup/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -306,23 +305,24 @@ class _loginScreenState extends State<LoginScreen> {
 
     try {
       final authProvider = context.read<MyAuthProvider>();
-      // В MyAuthProvider нет прямого метода resetPassword, но мы можем вызвать его через сервис
-      // или добавить в провайдер. Проверим сервис: в AuthService есть resetPassword.
-      // Попробуем вызвать напрямую через сервис, если провайдер его предоставляет,
-      // но правильнее будет добавить метод в провайдер.
+      final success = await authProvider.resetPassword(email);
 
-      // Для начала проверим, есть ли метод в провайдере (согласно аттачментам его там нет).
-      // Но я добавлю вызов через ScaffoldMessenger для уведомления.
-
-      await context.read<AuthService>().resetPassword(email: email);
-
-      if (mounted) {
+      if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Password reset link has been sent to $email'),
             backgroundColor: AppColors.primaryBlue,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 4),
           ),
         );
+        // Очищаем поле email после успешной отправки
+        _emailEditController.clear();
+      } else if (mounted) {
+        setState(() {
+          _loginErrors["firebase"] =
+              authProvider.error ?? "Error sending reset link";
+        });
       }
     } catch (e) {
       if (mounted) {

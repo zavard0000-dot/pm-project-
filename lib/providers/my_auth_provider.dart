@@ -449,4 +449,16 @@ class MyAuthProvider extends ChangeNotifier {
     }
     return 'An error occurred. Please try again';
   }
+
+  // Reset Password
+  Future<bool> resetPassword(String email) async {
+    try {
+      _error = null;
+      await _authService.resetPassword(email: email);
+      return true;
+    } catch (e) {
+      _error = _parseError(e.toString());
+      return false;
+    }
+  }
 }
