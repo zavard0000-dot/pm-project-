@@ -18,20 +18,27 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late int _currentIndex;
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialTab;
-  }
 
-  final List<Widget> _screens = [
-    const FeedTabScreen(),
-    const FavoritesTabScreen(),
-    const CreateTabScreen(),
-    const NotificationsTabScreen(),
-    const ProfileScreen(),
-  ];
+    _screens = [
+      const FeedTabScreen(),
+      const FavoritesTabScreen(),
+      CreateTabScreen(
+        onAnnouncementCreated: () {
+          setState(() {
+            _currentIndex = 0; // Switch to Feed tab
+          });
+        },
+      ),
+      const NotificationsTabScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

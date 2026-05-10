@@ -10,8 +10,13 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 class CreateTabScreen extends StatefulWidget {
   final Announcement? announcementToEdit;
+  final VoidCallback? onAnnouncementCreated;
 
-  const CreateTabScreen({super.key, this.announcementToEdit});
+  const CreateTabScreen({
+    super.key,
+    this.announcementToEdit,
+    this.onAnnouncementCreated,
+  });
 
   @override
   State<CreateTabScreen> createState() => _CreateTabScreenState();
@@ -169,7 +174,9 @@ class _CreateTabScreenState extends State<CreateTabScreen> {
         if (_isEditing) {
           Navigator.of(context).pop();
         } else {
+          // После создания нового объявления переходим на Feed
           _resetForm();
+          widget.onAnnouncementCreated?.call();
         }
       }
     } catch (e) {

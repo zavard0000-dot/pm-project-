@@ -476,6 +476,13 @@ class AuthService implements AuthInterface {
             .toList();
       }
 
+      // Убеждаемся, что объявления отсортированы по новым всегда
+      announcements.sort(
+        (a, b) => (b.createdAt ?? DateTime.now()).compareTo(
+          a.createdAt ?? DateTime.now(),
+        ),
+      );
+
       print(
         '[AuthService] Successfully fetched ${announcements.length} announcements',
       );
